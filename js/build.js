@@ -2,13 +2,14 @@
 //  TODO: make this package available via npm
 //  TODO: refactor to do as many build steps concurrently as possible.
 
+'use strict'
+
 const BUILD = require('./build-utils');
-const fs = require('fs');
+const fs = require('fs-extra');
+const sarrMkdirs = BUILD.pkgkey('mkdirs');
 
-console.log(BUILD.pkgkey('mkdirs'));        // testing require('build-utils');
-
-//  recursively delete mkdirs
-//  recursively build empty mkdirs
+BUILD.rmrf(sarrMkdirs);
+BUILD.mkdirp(sarrMkdirs);                   //  require('fs-extra').mkdirp doesn't support multiple dirs via space separated
 
 //  npm run build-libs
 //  npm run build-models

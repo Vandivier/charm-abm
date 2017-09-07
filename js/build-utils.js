@@ -1,25 +1,10 @@
-const fs = require("fs");
-const path = require("path");
+'use strict'
+
+const fs = require('graceful-fs');
 const json = JSON.parse(fs.readFileSync('package.json'));
-
-const rmdir = function (dir) {
-    var list = fs.readdirSync(dir);
-    for (var i = 0; i < list.length; i++) {
-        var filename = path.join(dir, list[i]);
-        var stat = fs.statSync(filename);
-
-        if (filename == "." || filename == "..") {
-            // pass these files
-        } else if (stat.isDirectory()) {
-            // rmdir recursively
-            rmdir(filename);
-        } else {
-            // rm fiilename
-            fs.unlinkSync(filename);
-        }
-    }
-    fs.rmdirSync(dir);
-};
+const mkdirsSync = require('./mkdirs-sync');
+const path = require('path');
+const removeSync = require('./rimraf').sync;
 
 const pkgkey = function (key) {
     if (!key) throw new Error('pkgkey called with no argument');
@@ -30,7 +15,16 @@ const pkgkey = function (key) {
     return val;
 }
 
+const mkdirp = function(v) {
+    v.split(' ').forEach(el => mkdirsSync(el));
+}
+
+const rmrf = function(v) {
+    v.split(' ').forEach(el => removeSync(el));
+}
+
 module.exports = {
-    rmdir: rmdir,
-    pkgkey: pkgkey
+    mkdirp: mkdirp,
+    pkgkey: pkgkey,
+    rmrf: rmrf
 };
