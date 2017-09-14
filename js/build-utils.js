@@ -23,8 +23,8 @@ const rmrf = function(v) {
     v.split(' ').forEach(el => removeSync(el));
 }
 
-const forEachSpace = function(sarr, fCallback) {
-    sarr.split(' ').forEach(fCallback);
+const forEachSpace = function(v, fCallback) {
+    v.split(' ').forEach(fCallback);
 }
 
 module.exports = {
