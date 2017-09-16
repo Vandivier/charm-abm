@@ -1,68 +1,25 @@
 {
-  "name": "asx-abm",
-  "version": "v0.3.1",
-  "description": "AgentScript, 2nd Edition",
-  "homepage": "http://backspaces.github.io/asx/",
+  "name": "charm-abm",
+  "version": "v0.0.1",
+  "description": "An ABM of Education using ASX",
+  "homepage": "https://github.com/Vandivier/charm-abm",
   "main": "src/app.js",
-  "author": "Owen Densmore",
+  "author": "John Vandivier",
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/backspaces/asx.git"
   },
   "keywords": [
-    "netlogo",
-    "3D",
-    "three.js",
+    "education",
+    "asx",
     "agentscript",
     "agent-based",
     "multi-agent"
   ],
-  "libs": [
-    "node_modules/three/build/three.min.js",
-    "node_modules/three/examples/js/controls/OrbitControls.js",
-    "node_modules/stats.js/build/stats.min.js",
-    "node_modules/dat.gui/build/dat.gui.min.js"
-  ],
-  "wraplibs": [
-    [
-      "libs/three.min.js",
-      "THREE"
-    ],
-    [
-      "libs/OrbitControls.js",
-      "THREE.OrbitControls"
-    ],
-    [
-      "libs/dat.gui.min.js",
-      "dat"
-    ],
-    [
-      "libs/stats.min.js",
-      "Stats"
-    ]
-  ],
-  "docsfiles": [
-    "dist",
-    "models",
-    "README.md"
-  ],
-  "mkdirs": [
-    "dist",
-    "dist/AS",
-    "libs",
-    "models/scripts"
-  ],
   "scripts": {
-    "build-node": "node js/build",
-    "clean": "rm -rf `bin/pkgkey.js mkdirs` && npm run mkdirs",
-    "mkdirs": "mkdir -p `bin/pkgkey.js mkdirs`",
     "start": "node node_modules/serve/bin/serve.js -p 3000",
     "build": "npm run clean && npm run build-libs && npm run build-models && npm run build-dist && squash dist/AS.js > dist/AS.min.js && squash dist/AS.module.js > dist/AS.module.min.js && npm run build-docs && cp docs/README.md .",
-    "build-libs": "cp `bin/pkgkey.js libs` libs && bin/wraplibs.js",
-    "build-docs": "cp -Rp `bin/pkgkey.js docsfiles` docs",
-    "build-models": "bin/buildscripts.sh models/src",
-    "build-dist": "rollup -c && cp src/* dist/AS",
     "watch": "sane 'npm run build-models' './models/src/' & sane 'npm run build-dist' './src/'"
   },
   "dependencies": {
@@ -71,6 +28,7 @@
     "three": "latest"
   },
   "devDependencies": {
+    "asx-abm": "^0.3.0",
     "butternut": "^0.4.6",
     "graceful-fs": "^4.1.11",
     "rollup": "^0.41.6",
