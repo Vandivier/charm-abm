@@ -1,7 +1,3 @@
-// import ColorMap from '../../dist/AS/ColorMap.js'
-// import DataSet from '../../dist/AS/DataSet.js'
-// import Model from '../../dist/AS/Model.js'
-// import util from '../../dist/AS/util.js'
 import {ColorMap, DataSet, Model, util} from '../../dist/AS.module.js'
 
 util.toWindow({ ColorMap, DataSet, Model, util })
