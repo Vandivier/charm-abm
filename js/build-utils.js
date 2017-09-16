@@ -23,7 +23,12 @@ const rmrf = function(v) {
     v.split(' ').forEach(el => removeSync(el));
 }
 
+const forEachSpace = function(v, fCallback) {
+    v.split(' ').forEach(fCallback);
+}
+
 module.exports = {
+    forEachSpace: forEachSpace,
     mkdirp: mkdirp,
     pkgkey: pkgkey,
     rmrf: rmrf
