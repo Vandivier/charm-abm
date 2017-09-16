@@ -51,7 +51,7 @@
     "models/scripts"
   ],
   "scripts": {
-    "buildnode": "node js/build",
+    "build-node": "node js/build",
     "clean": "rm -rf `bin/pkgkey.js mkdirs` && npm run mkdirs",
     "mkdirs": "mkdir -p `bin/pkgkey.js mkdirs`",
     "start": "node node_modules/serve/bin/serve.js -p 3000",
