@@ -16,6 +16,7 @@ AS      ../dist/AS.min.js
 TODO: what about ../dist/AS.module.min.js
 */
 
+/*
 let app = document.location.search.substring(1) || 'scripts/diffuse'
 if (app.endsWith('/')) app = app.slice(0, -1)       // trailing / problem with SimpleHTTPServer. ref: https://github.com/backspaces/asx/issues/11
 let [appDir, appName] = app.split('/')
@@ -41,3 +42,4 @@ switch (appDir) {
     default:
         throw `Oops: ${appDir} not valid dir`
 }
+*/

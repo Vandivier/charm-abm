@@ -20,6 +20,7 @@
   "scripts": {
     "build": "npm run clean && npm run build-libs && npm run build-models && npm run build-dist && squash dist/AS.js > dist/AS.min.js && squash dist/AS.module.js > dist/AS.module.min.js && npm run build-docs && cp docs/README.md .",
     "dev": "webpack -d --watch",
+    "dev-no-watch": "webpack -d",
     "prod": "webpack -p",
     "start": "node node_modules/serve/bin/serve.js -p 3000",
     "watch": "sane 'npm run build-models' './models/src/' & sane 'npm run build-dist' './src/'"
@@ -31,8 +32,8 @@
   },
   "devDependencies": {
     "asx-abm": "^0.3.0",
-    "butternut": "^0.4.6",
-    "rollup": "^0.41.6",
-    "sane": "^1.6.0"
+    "html-webpack-plugin": "^2.30.1",
+    "sane": "^1.6.0",
+    "webpack": "^3.6.0"
   }
 }
