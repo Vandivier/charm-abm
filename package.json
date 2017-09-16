@@ -70,7 +70,6 @@
   },
   "devDependencies": {
     "butternut": "^0.4.6",
-    "fs-extra": "^4.0.1",
     "graceful-fs": "^4.1.11",
     "rollup": "^0.41.6",
     "sane": "^1.6.0",
