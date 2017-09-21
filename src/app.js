@@ -1,8 +1,20 @@
 'use strict'
 
-import AS from 'asx-abm';
+//var THREE = require('three');
+//import THREE from 'three';
+//import Stats from 'stats.js';
+//import dat; // https://github.com/dataarts/dat.gui/issues/132
+import * as AS from 'asx-abm';
 
 console.log(AS);
+console.log(AS.THREE);
+
+/*
+var THREE = require('three');
+var scene = new THREE.Scene();
+import * as THREE from 'three';
+const scene = new THREE.Scene();
+*/
 
 //import dat from '';
 
