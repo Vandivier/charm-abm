@@ -18,11 +18,5 @@ module.exports = {
     new HtmlWebpackPlugin({
             template: './src/index.html'
         })
-  ],
-    resolve: {
-        modules: [
-            path.resolve('./node_modules/asx-abm/dist'),
-            path.resolve('./node_modules')
-          ]
-    }
+  ]
 }

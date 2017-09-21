@@ -1,34 +1,20 @@
+// TODO: webpack loader so I can use await. This might be the same prob the AS supermodule had.
+
 'use strict'
 
-//var THREE = require('three');
-//import THREE from 'three';
-//import Stats from 'stats.js';
-//import dat; // https://github.com/dataarts/dat.gui/issues/132
-import * as AS from 'asx-abm';
+// can't use ES6 Modules this is not ES6.
+
+//in html for now: <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.5/dat.gui.js"></script>
+//var THREE = require('three');           // TODO: why require() works but import doesn't?
+//var Stats = require('stats.js')();      // TODO: require('stats.js') vs require('stats.js')()
+
+var AS = require('asx-abm').AS; // it's somehow executing before the other imports, so we have to use html script tag
+
+//import dat from 'dat.gui';    // weird one. https://github.com/dataarts/dat.gui
+                                // https://github.com/dataarts/dat.gui/issues/132
 
 console.log(AS);
-console.log(AS.THREE);
 
-/*
-var THREE = require('three');
-var scene = new THREE.Scene();
-import * as THREE from 'three';
-const scene = new THREE.Scene();
-*/
-
-//import dat from '';
-
-/*
-<script src = "https://unpkg.com/three@0.85.2/examples/js/libs/dat.gui.min.js"></script>
-?       https://unpkg.com/three@0.85.2/examples/js/controls/OrbitControls.js
-stats   https://unpkg.com/three@0.85.2/examples/js/libs/stats.min.js
-THREE   https://unpkg.com/three@0.85.2/build/three.min.js
-
-AS      ../dist/AS.min.js
-TODO: what about ../dist/AS.module.min.js
-*/
-
-/*
 let app = document.location.search.substring(1) || 'scripts/diffuse'
 if (app.endsWith('/')) app = app.slice(0, -1)       // trailing / problem with SimpleHTTPServer. ref: https://github.com/backspaces/asx/issues/11
 let [appDir, appName] = app.split('/')
@@ -54,4 +40,3 @@ switch (appDir) {
     default:
         throw `Oops: ${appDir} not valid dir`
 }
-*/
