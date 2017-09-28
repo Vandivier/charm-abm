@@ -7,7 +7,6 @@ const webpack = require('webpack');
 const config = require('./webpack.config.js');
 
 const options = {
-  contentBase: './dist',
   //hot: true,// TODO: enable. ref: https://www.ctheu.com/2015/05/14/using-react-hot-loader-with-a-webpack-dev-server-and-a-node-server/
   stats: {
     colors: true
