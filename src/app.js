@@ -2,35 +2,40 @@
 
 'use strict'
 
-// can't use ES6 Modules this is not ES6.
-
-//in html for now: <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.5/dat.gui.js"></script>
-//var THREE = require('three');           // TODO: why require() works but import doesn't?
-//var Stats = require('stats.js')();      // TODO: require('stats.js') vs require('stats.js')()
-
-//var AS = require('asx-abm').AS; // it's somehow executing before the other imports, so we have to use html script tag
-
-//import dat from 'dat.gui';    // weird one. https://github.com/dataarts/dat.gui
-                                // https://github.com/dataarts/dat.gui/issues/132
-
-//console.log(AS);
-
 // webpack-style async module loading
 
-const pThree = import(
-                  /* webpackChunkName: "three" */
-                  /* webpackMode: "eager" */
-                  'three'
-                );
+//let THREE = null; // OrbitControls.wrapper.js tries to read a property of this variable.
+
 const pStats = import(
                   /* webpackChunkName: "stats" */
                   /* webpackMode: "eager" */
                   'stats.js'
                 );
+const pThree = import(
+                  /* webpackChunkName: "three" */
+                  /* webpackMode: "eager" */
+                  'three'
+                );
 
-Promise.all([pThree, pStats]).then(function(arrModules){
-    var THREE = arrModules[0];
-    var Stats = arrModules[1]();
+Promise.all([pStats, pThree]).then(function(arrModules){
+    var Stats = arrModules[0];
+    window.THREE = arrModules[1] || {};
+});
+
+// pOrbitControls needs THREE
+const pOrbitControls = import(
+                  /* webpackChunkName: "OrbitControls" */
+                  /* webpackMode: "lazy" */
+                  './lib/OrbitControls.wrapper.js'
+                );
+
+// requires SCSS loader
+const pDat = Promise.resolve();
+
+Promise.all([pDat, pOrbitControls]).then(function(arrModules){
+    //var dat = arrModules[0];
+    var OrbitControls = arrModules[1];
+
     const pAs = import(
                   /* webpackChunkName: "asx-abm" */
                   /* webpackMode: "lazy" */
@@ -38,7 +43,6 @@ Promise.all([pThree, pStats]).then(function(arrModules){
                 );
     pAs.then(_as => {
         var AS = _as;
-        debugger
         console.log(AS);
     })
 
@@ -54,9 +58,6 @@ if (appName === undefined) {
     appName = appDir
     appDir = 'scripts'
 }
-
-//import X from app
-
 
 const loc = `./${appDir}/${appName}.js`
 console.log('running:', loc, 'dir:', appDir, 'name:', appName + '.js')

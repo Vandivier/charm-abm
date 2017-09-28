@@ -1,8 +1,8 @@
 /* eslint-disable */
 var THREE = THREE || require('./three.wrapper.js') || require('three');
-var OrbitControls = THREE.OrbitControls || require('./OrbitControls.wrapper.js') || require('OrbitControls');
+var OrbitControls = OrbitControls || null; // TODO: fix. THREE.OrbitControls || require('./OrbitControls.wrapper.js') || require('OrbitControls.wrapper.js');
 var Stats = Stats || require('./Stats.wrapper.js') || require('stats.js');
-var dat = dat || require('./dat.gui.wrapper.js') || require('dat.gui');
+//var dat = dat || require('./dat.gui.wrapper.js') || require('dat.gui');
 
 if (!THREE.OrbitControls && OrbitControls) THREE.OrbitControls = OrbitControls;
 
