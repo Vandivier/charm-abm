@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "build": "npm run clean && npm run build-libs && npm run build-models && npm run build-dist && squash dist/AS.js > dist/AS.min.js && squash dist/AS.module.js > dist/AS.module.min.js && npm run build-docs && cp docs/README.md .",
-    "dev": "node_modules/.bin/webpack-dev-server",
+    "dev": "node webpack-dev-server",
     "debug": "webpack -d --display-error-details",
     "prod": "webpack -p",
     "start": "node node_modules/serve/bin/serve.js -p 3000",
@@ -33,8 +33,8 @@
   },
   "devDependencies": {
     "asx-abm": "^0.3.0",
+    "express": "^4.15.5",
     "html-webpack-plugin": "^2.30.1",
-    "rollup-plugin-root-import": "^0.2.2",
     "sane": "^1.6.0",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.8.2"

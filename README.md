@@ -26,3 +26,6 @@ Express or another server could be easily implemented. It may or may not be comi
 The ASX repo has additional models you can view in a similar way:
 * [http://backspaces.github.io/asx/models?diffuse](http://backspaces.github.io/asx/models?diffuse)
 
+
+# TODO
+* [Nuxtify](https://github.com/nuxt-community/express-template)

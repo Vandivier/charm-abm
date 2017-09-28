@@ -1,8 +1,9 @@
 //ref: https://www.youtube.com/watch?v=soI7X-7OSb4
 
+'use strict'
+
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
-
 const sDist = path.resolve(__dirname, 'dist')
 
 module.exports = {
