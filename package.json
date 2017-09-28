@@ -19,7 +19,8 @@
   ],
   "scripts": {
     "build": "npm run clean && npm run build-libs && npm run build-models && npm run build-dist && squash dist/AS.js > dist/AS.min.js && squash dist/AS.module.js > dist/AS.module.min.js && npm run build-docs && cp docs/README.md .",
-    "dev": "node webpack-dev-server",
+    "dev": "node_modules/.bin/webpack-dev-server",
+    "dev-server": "node webpack-dev-server",
     "debug": "webpack -d --display-error-details",
     "prod": "webpack -p",
     "start": "node node_modules/serve/bin/serve.js -p 3000",

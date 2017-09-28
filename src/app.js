@@ -8,14 +8,14 @@
 //var THREE = require('three');           // TODO: why require() works but import doesn't?
 //var Stats = require('stats.js')();      // TODO: require('stats.js') vs require('stats.js')()
 
-var AS = require('asx-abm').AS; // it's somehow executing before the other imports, so we have to use html script tag
+const AS = require('asx-abm').AS; // it's somehow executing before the other imports, so we have to use html script tag
 
 //import dat from 'dat.gui';    // weird one. https://github.com/dataarts/dat.gui
                                 // https://github.com/dataarts/dat.gui/issues/132
 
 console.log(AS);
 
-let app = document.location.search.substring(1) || 'scripts/diffuse'
+let app = document.location.search.substring(1) || 'static/scripts/diffuse'
 if (app.endsWith('/')) app = app.slice(0, -1)       // trailing / problem with SimpleHTTPServer. ref: https://github.com/backspaces/asx/issues/11
 let [appDir, appName] = app.split('/')
 if (appName === undefined) {
@@ -24,6 +24,10 @@ if (appName === undefined) {
     appName = appDir
     appDir = 'scripts'
 }
+
+import X from app
+
+/*
 const loc = `./${appDir}/${appName}.js`
 console.log('running:', loc, 'dir:', appDir, 'name:', appName + '.js')
 document.title = `asx:${appName}`
@@ -40,3 +44,4 @@ switch (appDir) {
     default:
         throw `Oops: ${appDir} not valid dir`
 }
+*/

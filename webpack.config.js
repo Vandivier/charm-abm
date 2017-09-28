@@ -7,13 +7,19 @@ const path = require('path')
 const sDist = path.resolve(__dirname, 'dist')
 
 module.exports = {
-    entry: './src/app.js',
+    entry: [
+        'webpack-dev-server/client?http://' + require('ip').address() + ':5000/', // ref: https://github.com/webpack/webpack-dev-server/issues/416, 5000 matches webpack-dev-server.js
+        path.resolve(__dirname, 'src/app.js')
+    ],
     output: {
         path: sDist,
         filename: 'app.bundle.js'
     },
     devServer: {
-        contentBase: sDist
+        contentBase: sDist,
+        proxy: {
+            '/static': '/src/static'
+        }
     },
     plugins: [
     new HtmlWebpackPlugin({
