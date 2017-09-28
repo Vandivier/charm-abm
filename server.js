@@ -8,6 +8,6 @@ const app = express();
 const path = require('path');
 
 // TODO: logging if needed, including a client log service
-app.use(express.static(path.join(__dirname, 'src')));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 module.exports = app;
