@@ -23,7 +23,7 @@
     "dev-server": "node webpack-dev-server",
     "debug": "webpack -d --display-error-details",
     "prod": "webpack -p",
-    "start": "node node_modules/serve/bin/serve.js -p 3000",
+    "start": "node ./bin/www",
     "watch": "sane 'npm run build-models' './models/src/' & sane 'npm run build-dist' './src/'"
   },
   "dependencies": {

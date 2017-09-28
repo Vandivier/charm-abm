@@ -29,3 +29,6 @@ The ASX repo has additional models you can view in a similar way:
 
 # TODO
 * [Nuxtify](https://github.com/nuxt-community/express-template)
+
+# Lessons Learned
+* webpack-dev-server doesn't currently work with static externals

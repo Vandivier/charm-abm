@@ -8,7 +8,7 @@
 //var THREE = require('three');           // TODO: why require() works but import doesn't?
 //var Stats = require('stats.js')();      // TODO: require('stats.js') vs require('stats.js')()
 
-const AS = require('asx-abm').AS; // it's somehow executing before the other imports, so we have to use html script tag
+//import AS from 'asx-abm'; // it's somehow executing before the other imports, so we have to use html script tag
 
 //import dat from 'dat.gui';    // weird one. https://github.com/dataarts/dat.gui
                                 // https://github.com/dataarts/dat.gui/issues/132
@@ -25,9 +25,9 @@ if (appName === undefined) {
     appDir = 'scripts'
 }
 
-import X from app
+//import X from app
 
-/*
+
 const loc = `./${appDir}/${appName}.js`
 console.log('running:', loc, 'dir:', appDir, 'name:', appName + '.js')
 document.title = `asx:${appName}`
@@ -44,4 +44,4 @@ switch (appDir) {
     default:
         throw `Oops: ${appDir} not valid dir`
 }
-*/
+
