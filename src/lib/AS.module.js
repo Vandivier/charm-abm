@@ -1,8 +1,10 @@
 /* eslint-disable */
-import THREE from '../dist/three.wrapper.js';
-import '../dist/OrbitControls.wrapper.js';
-import Stats from '../dist/stats.wrapper.js';
-import dat from '../dist/dat.gui.wrapper.js';
+var THREE = THREE || require('./three.wrapper.js') || require('three');
+var OrbitControls = THREE.OrbitControls || require('./OrbitControls.wrapper.js') || require('OrbitControls');
+var Stats = Stats || require('./Stats.wrapper.js') || require('stats.js');
+var dat = dat || require('./dat.gui.wrapper.js') || require('dat.gui');
+
+if (!THREE.OrbitControls && OrbitControls) THREE.OrbitControls = OrbitControls;
 
 // A set of useful misc utils which will eventually move to individual files.
 // Note we use arrow functions one-liners, more likely to be optimized.
