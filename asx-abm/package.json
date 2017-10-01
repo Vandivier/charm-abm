@@ -49,14 +49,14 @@
     "name": "Owen Densmore"
   },
   "bugs": {
-    "url": "https://github.com/backspaces/asx/issues"
+    "url": "https://github.com/Vandivier/asx/issues"
   },
   "dependencies": {
     "dat.gui": "github:dataarts/dat.gui",
     "stats.js": "^0.17.0",
     "three": "latest"
   },
-  "description": "AgentScript, 2nd Edition",
+  "description": "AgentScript, 2nd Edition, refactored for NPM",
   "devDependencies": {
     "butternut": "^0.4.6",
     "graceful-fs": "^4.1.11",
@@ -75,7 +75,7 @@
     "README.md"
   ],
   "gitHead": "364a604c0fa8463502738ee9ff28b1f4779cfdee",
-  "homepage": "http://backspaces.github.io/asx/",
+  "homepage": "https://github.com/Vandivier/asx/",
   "keywords": [
     "netlogo",
     "3D",
@@ -109,7 +109,7 @@
   "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
-    "url": "git://github.com/backspaces/asx.git"
+    "url": "git://github.com/Vandivier/asx.git"
   },
   "scripts": {
     "build": "npm run clean && npm run build-libs && npm run build-models && npm run build-dist && squash dist/AS.js > dist/AS.min.js && squash dist/AS.module.js > dist/AS.module.min.js && npm run build-docs && cp docs/README.md .",
