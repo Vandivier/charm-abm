@@ -5,8 +5,6 @@ Charm ABM is my third attempt to build an agent based model of education.
 The current implementation leverages ASX and Webpack.
 
 ## Developer Information
-
-It's not on NPM at the moment, so you have to clone the repo:
 * `git clone`
 * `npm install` with Git Bash or similar. Doesn't work with cmd.
 * `npm start`
