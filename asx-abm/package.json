@@ -123,7 +123,7 @@
     "start": "node node_modules/serve/bin/serve.js -p 3000",
     "watch": "sane 'npm run build-models' './models/src/' & sane 'npm run build-dist' './src/'"
   },
-  "version": "0.3.2",
+  "version": "0.3.3",
   "wraplibs": [
     [
       "libs/three.min.js",
