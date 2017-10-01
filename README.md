@@ -23,6 +23,7 @@ The ASX repo has additional models you can view in a similar way:
 
 # TODO
 * [Nuxtify](https://github.com/nuxt-community/express-template)
+* [CI and test Cypress](https://docs.cypress.io/guides/guides/continuous-integration.html#)
 
 # Lessons Learned
 * webpack-dev-server doesn't currently work with static externals. Instead, `cp` with bash to build and serve via Express.
