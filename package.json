@@ -1,6 +1,6 @@
 {
   "name": "charm-abm",
-  "version": "v0.0.2",
+  "version": "v0.0.3",
   "description": "An ABM of Education using ASX",
   "homepage": "https://github.com/Vandivier/charm-abm",
   "main": "src/app.js",
