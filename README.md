@@ -7,15 +7,12 @@ The current implementation leverages ASX and Webpack.
 ## Developer Information
 
 It's not on NPM at the moment, so you have to clone the repo:
-* install [node-gyp](https://github.com/nodejs/node-gyp)
 * `git clone`
 * `npm install`
-* `npm run dev-no-watch`
-* open `http://<path to asx>/models` to run a model. Check console for messages
+* `npm start`
+* open [http://localhost:3000/](http://localhost:3000/) in your favorite browser rhyming with frome.
 
-Instead of `npm run dev-no-watch` you can:
-* `npm run dev` to enable Webpack's built-in watch.
-* `npm run prod` to build minified.
+You may need to install install [node-gyp](https://github.com/nodejs/node-gyp) before `npm install`
 
 ## Github Pages
 
@@ -26,9 +23,8 @@ Express or another server could be easily implemented. It may or may not be comi
 The ASX repo has additional models you can view in a similar way:
 * [http://backspaces.github.io/asx/models?diffuse](http://backspaces.github.io/asx/models?diffuse)
 
-
 # TODO
 * [Nuxtify](https://github.com/nuxt-community/express-template)
 
 # Lessons Learned
-* webpack-dev-server doesn't currently work with static externals
+* webpack-dev-server doesn't currently work with static externals. Instead, `cp` with bash to build and serve via Express.
