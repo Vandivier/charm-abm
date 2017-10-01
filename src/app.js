@@ -4,8 +4,6 @@
 
 // webpack-style async module loading
 
-//let THREE = null; // OrbitControls.wrapper.js tries to read a property of this variable.
-
 const pStats = import(
                   /* webpackChunkName: "stats" */
                   /* webpackMode: "eager" */
@@ -20,6 +18,10 @@ const pThree = import(
 Promise.all([pStats, pThree]).then(function(arrModules){
     var Stats = arrModules[0];
     window.THREE = arrModules[1] || {};
+    /*
+    debugger
+    window.THREE = arrModules[1] && arrModules[1].default || {};
+    */
 });
 
 // pOrbitControls needs THREE
@@ -29,7 +31,7 @@ const pOrbitControls = import(
                   './lib/OrbitControls.wrapper.js'
                 );
 
-// requires SCSS loader
+// TODO: requires SCSS loader. As an HTML script for now.
 const pDat = Promise.resolve();
 
 Promise.all([pDat, pOrbitControls]).then(function(arrModules){
@@ -41,38 +43,41 @@ Promise.all([pDat, pOrbitControls]).then(function(arrModules){
                   /* webpackMode: "lazy" */
                   './lib/AS.module.js'
                 );
-    pAs.then(_as => {
-        var AS = _as;
-        console.log(AS);
-    })
 
+    pAs.then(_as => {
+        window.AS = _as;
+        initModel();
+    });
 });
 
+function initModel() {
+    AS.util.setScript('static/scripts/diffuse.js');
+    /*
+    let app = document.location.search.substring(1) || 'static/scripts/diffuse'
+    if (app.endsWith('/')) app = app.slice(0, -1)       // trailing / problem with SimpleHTTPServer. ref: https://github.com/backspaces/asx/issues/11
+    let [appDir, appName] = app.split('/')
+    if (appName === undefined) {
+        console.log('Note: app path is "dir/name", dir is "scripts" or "src"')
+        console.log('..Using "scripts" as default')
+        appName = appDir
+        appDir = 'scripts'
+    }
 
-let app = document.location.search.substring(1) || 'static/scripts/diffuse'
-if (app.endsWith('/')) app = app.slice(0, -1)       // trailing / problem with SimpleHTTPServer. ref: https://github.com/backspaces/asx/issues/11
-let [appDir, appName] = app.split('/')
-if (appName === undefined) {
-    console.log('Note: app path is "dir/name", dir is "scripts" or "src"')
-    console.log('..Using "scripts" as default')
-    appName = appDir
-    appDir = 'scripts'
+    const loc = `./${appDir}/${appName}.js`
+    console.log('running:', loc, 'dir:', appDir, 'name:', appName + '.js')
+    document.title = `asx:${appName}`
+
+    switch (appDir) {
+        case 'scripts':
+            AS.util.setScript(loc);
+            break
+        case 'src':
+            AS.util.setScript(loc, {
+                type: 'module'
+            });
+            break
+        default:
+            throw `Oops: ${appDir} not valid dir`
+    }
+    */
 }
-
-const loc = `./${appDir}/${appName}.js`
-console.log('running:', loc, 'dir:', appDir, 'name:', appName + '.js')
-document.title = `asx:${appName}`
-
-switch (appDir) {
-    case 'scripts':
-        AS.util.setScript(loc);
-        break
-    case 'src':
-        AS.util.setScript(loc, {
-            type: 'module'
-        });
-        break
-    default:
-        throw `Oops: ${appDir} not valid dir`
-}
-
