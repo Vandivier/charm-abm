@@ -1,4 +1,5 @@
-/*  file description
+/**
+ *  file description
  *  try to keep custom server init logic here and boilerplate / lib code in ./bin/www
  */
 

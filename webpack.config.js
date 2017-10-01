@@ -15,10 +15,7 @@ module.exports = {
         filename: 'app.bundle.js'
     },
     devServer: {
-        contentBase: sDist,
-        proxy: {
-            '/static': '/src/static'
-        }
+        contentBase: sDist
     },
     plugins: [
     new HtmlWebpackPlugin({
