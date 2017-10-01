@@ -1,4 +1,4 @@
-class DiffuseModel extends Model {
+class DiffuseModel extends AS.Model {
   setup () {
     this.patches.own('ran ds')
     this.turtles.setDefault('speed', 0.5)
@@ -45,4 +45,4 @@ model.start()
 console.log('patches:', model.patches.length)
 console.log('turtles:', model.turtles.length)
 const {world, patches, turtles, links} = model
-util.toWindow({ world, patches, turtles, links, model })
+AS.util.toWindow({ world, patches, turtles, links, model })
