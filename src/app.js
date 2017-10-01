@@ -41,7 +41,7 @@ Promise.all([pDat, pOrbitControls]).then(function(arrModules){
     const pAs = import(
                   /* webpackChunkName: "asx-abm" */
                   /* webpackMode: "lazy" */
-                  './lib/AS.module.js'
+                  'asx-abm'
                 );
 
     pAs.then(_as => {
