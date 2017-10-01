@@ -1,8 +1,6 @@
-import {ColorMap, DataSet, Model, util} from '../../dist/AS.module.js'
+//AS.util.toWindow({ AS.ColorMap, AS.DataSet, AS.Model, AS.util })
 
-util.toWindow({ ColorMap, DataSet, Model, util })
-
-class DiffuseModel extends Model {
+class DiffuseModel extends AS.Model {
   setup () {
     this.patches.own('ran ds')
     this.turtles.setDefault('speed', 0.5)
@@ -12,10 +10,10 @@ class DiffuseModel extends Model {
     this.radius = 6
 
     // this.cmap = ColorMap.Jet
-    this.cmap = ColorMap.Rgb256
+    this.cmap = AS.ColorMap.Rgb256
     // REMIND: Three mouse picking: this.mouse = new Mouse(this, true).start()
     this.patches.ask(p => {
-      p.ran = util.randomFloat(1.0)
+      p.ran = AS.util.randomFloat(1.0)
       p.ds = 0
     })
 
@@ -27,7 +25,7 @@ class DiffuseModel extends Model {
   }
   step () {
     this.turtles.ask((t) => {
-      t.theta += util.randomCentered(0.1)
+      t.theta += AS.util.randomCentered(0.1)
       t.forward(t.speed)
       this.patches.inRadius(t.patch, this.radius, true).ask(p => {
         p.ran = Math.min(p.ran + 0.1, 0.8)
@@ -38,7 +36,7 @@ class DiffuseModel extends Model {
   }
 }
 
-const options = Model.defaultWorld(2, 100)
+const options = AS.Model.defaultWorld(2, 100)
 options.minX = 2 * options.minX
 options.maxX = 2 * options.maxY
 const model = new DiffuseModel(document.body, options).start()
@@ -47,5 +45,5 @@ model.whenReady(() => {
   console.log('patches:', model.patches.length)
   console.log('turtles:', model.turtles.length)
   const {world, patches, turtles, links} = model
-  util.toWindow({ world, patches, turtles, links, model })
+  AS.util.toWindow({ world, patches, turtles, links, model })
 })
