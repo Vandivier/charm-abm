@@ -23,7 +23,7 @@
     "dev-server": "node webpack-dev-server",
     "debug": "webpack -d --display-error-details",
     "prod": "webpack -p",
-    "start": "webpack -d && rm -r dist/static && cp -r src/static dist/static && node ./bin/www",
+    "start": "webpack -d && rm -rf dist/static && cp -r src/static dist/static && node ./bin/www",
     "watch": "sane 'npm run build-models' './models/src/' & sane 'npm run build-dist' './src/'"
   },
   "dependencies": {
