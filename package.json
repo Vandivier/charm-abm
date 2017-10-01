@@ -33,7 +33,7 @@
     "three": "latest"
   },
   "devDependencies": {
-    "asx-abm": "^0.3.0",
+    "asx-abm": "^0.3.3",
     "express": "^4.15.5",
     "html-webpack-plugin": "^2.30.1",
     "sane": "^1.6.0",
