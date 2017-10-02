@@ -46,3 +46,18 @@ options.maxX = 2 * options.maxY
 const model = new DiffuseModel(document.body, options)
 model.setup()
 model.start()
+
+/* TODO: move code below to app.js. here for convenience only. */
+
+var MouseControl = function() {
+  this.stopped = false;
+};
+
+window.onclick = function() {
+    if (model.anim.stopped) {
+        model.anim.start()
+    }
+    else {
+        model.anim.stop()
+    }
+}
