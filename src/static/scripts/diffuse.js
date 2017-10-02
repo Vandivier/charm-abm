@@ -1,10 +1,16 @@
+/*
+design: I have 3 kinds of stationary non-agent turtles: homes, schools, and jobs.
+then, there are turtle turtles who represent people.
+depending on turtle prefs, they will max utility possibly by going to school or nah, job or nah, etc.
+need sugarscape-like eat or die; lifespan. maybe later procreate w generations
+*/
+
 class DiffuseModel extends AS.Model {
   setup () {
     this.patches.own('ran ds')
     this.turtles.setDefault('speed', 0.3)
-    //this.turtles.setDefault('atEdge', 'wrap') // wrap is cool for world but not for a country
-    this.turtles.setDefault('size', 2.5)
-    this.population = 100
+    this.turtles.setDefault('size', 1)
+    this.population = 10
     this.radius = 2
     this.turtles.setDefault('shape', 'circle')
 
@@ -40,9 +46,3 @@ options.maxX = 2 * options.maxY
 const model = new DiffuseModel(document.body, options)
 model.setup()
 model.start()
-
-//  Debugging
-console.log('patches:', model.patches.length)
-console.log('turtles:', model.turtles.length)
-const {world, patches, turtles, links} = model
-AS.util.toWindow({ world, patches, turtles, links, model })
