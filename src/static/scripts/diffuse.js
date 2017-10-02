@@ -1,13 +1,13 @@
 class DiffuseModel extends AS.Model {
   setup () {
     this.patches.own('ran ds')
-    this.turtles.setDefault('speed', 0.5)
-    this.turtles.setDefault('atEdge', 'wrap')
-    this.turtles.setDefault('size', 5)
-    this.population = 2
-    this.radius = 6
+    this.turtles.setDefault('speed', 0.3)
+    //this.turtles.setDefault('atEdge', 'wrap') // wrap is cool for world but not for a country
+    this.turtles.setDefault('size', 2.5)
+    this.population = 100
+    this.radius = 2
+    this.turtles.setDefault('shape', 'circle')
 
-    // this.cmap = ColorMap.Jet
     this.cmap = AS.ColorMap.Rgb256
     // REMIND: Three mouse picking: this.mouse = new Mouse(this, true).start()
     this.patches.ask(p => {
@@ -34,7 +34,7 @@ class DiffuseModel extends AS.Model {
   }
 }
 
-const options = AS.Model.defaultWorld(2, 100)
+const options = AS.Model.defaultWorld(2, 50)
 options.minX = 2 * options.minX
 options.maxX = 2 * options.maxY
 const model = new DiffuseModel(document.body, options)
