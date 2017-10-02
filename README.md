@@ -12,18 +12,13 @@ The current implementation leverages ASX and Webpack.
 
 You may need to install install [node-gyp](https://github.com/nodejs/node-gyp) before `npm install`
 
-## Github Pages
+## Usage
 
-This model is currently implemented as a static model served by GitHub using gh-pages.
+Stop and start the model by clicking.
 
-Express or another server could be easily implemented. It may or may not be coming soon.
-
-The ASX repo has additional models you can view in a similar way:
-* [http://backspaces.github.io/asx/models?diffuse](http://backspaces.github.io/asx/models?diffuse)
-
-# TODO
+## TODO
 * [Nuxtify](https://github.com/nuxt-community/express-template)
 * [CI and test Cypress](https://docs.cypress.io/guides/guides/continuous-integration.html#)
 
-# Lessons Learned
+## Lessons Learned
 * webpack-dev-server doesn't currently work with static externals. Instead, `cp` with bash to build and serve via Express.
