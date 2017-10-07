@@ -7,7 +7,29 @@ need sugarscape-like eat or die; lifespan. maybe later procreate w generations
 
 //ref for pathfinding home:
 https://github.com/backspaces/asx/blob/38d3e2bd945cdfdeed367ba587533f23cfba13c9/docs/models/scripts/exit.js
+
+TODO: pass constants from app.js
+
+//  TODO: utils.randomFromDistrobution() and utils.randomSkewed(); eg for age
+//  ref: https://www.npmjs.com/package/skew-normal-random
+//  abstract derivatives?? ref: http://mathjs.org/
+//  ref: https://github.com/errcw/gaussian
+//  ref: https://www.che.utah.edu/~tony/course/material/Statistics/all_funcs.php
+//  ref: http://www.ollysco.de/2012/04/gaussian-normal-functions-in-javascript.html
+//  ref: https://simplestatistics.org/
+//  ref: https://github.com/jstat/jstat
+//  ref: http://www.statisticsblog.com/2015/10/random-samples-in-js-using-r-functions/
+//  ref: https://github.com/Mattasher/probability-distributions/blob/master/index.js
+
+notes:
+model.reset() doesn't seem to work as expected. model.setup() resets the data state but not camera angle
 */
+
+const constants = {
+    iAverageAge: 38, // median us age
+    iAgeStandardDeviation: 10, //totally made up
+    iSpeed: 2.5  // arbitrary normal targeted at a human-watcheable speed
+}
 
 class DiffuseModel extends AS.Model {
     setup() {
@@ -24,7 +46,6 @@ class DiffuseModel extends AS.Model {
 
         // patch config
         this.patches.own('ran ds') // arbitray agent property names
-        this.turtles.setDefault('speed', 0.3)
         //this.turtles.setDefault('breed', this.uninterestings)
         this.patches.ask(p => {
             p.setBreed(this.uninterestings)
@@ -35,24 +56,21 @@ class DiffuseModel extends AS.Model {
             patch.originalColor = AS.util.randomFloat(1.0)
             patch.ran = patch.originalColor
         })
-
         // randomly select patches to spawn ('sprout') agents === turtles
         // TODO: a better model would have an increased chance of a person spawning next to another person rather than an even distribution of starting anywhere
         this.patches.nOf(this.population).ask(patch => {
             patch.sprout(1, this.turtles, turtle => {
-                turtle.patch.setBreed(this.homes)
+                fInitTurtle(turtle, {
+                    patch: patch
+                })
             })
         })
-
         this.uninterestings.ask(uninteresting => {
             identifyPatchType(uninteresting, this);
         })
 
-        // turtle === agent config
-        //this.turtles.own('speed') // arbitray agent property names
-        this.turtles.setDefault('speed', 0.3)
+        // turtle config === agent config
         this.turtles.setDefault('size', 1)
-        this.turtles.setDefault('age', AS.util.randomInt(76)) // US national med age ~ 38
     }
 
     // TODO: aging and dying agents
@@ -74,8 +92,7 @@ class DiffuseModel extends AS.Model {
         */
 
         this.turtles.ask((turtle) => {
-            turtle.theta = 0;// += AS.util.randomCentered(0.1)
-            turtle.forward(turtle.speed)
+            fGetDesiredMovement(turtle);
 
             this.patches.inRadius(turtle.patch, this.radius, true).ask(patch => {
                 patch.ran = this.iHighlightColor;
@@ -117,4 +134,20 @@ function identifyPatchType(patch, _model) {
     else if (AS.util.randomInt(100) < iDensity) {
         patch.setBreed(_model.schools)
     }
+}
+
+function fInitTurtle(turtle, oData) {
+    turtle.age = AS.util.randomNormal(constants.iAverageAge, constants.iAverageAge);
+    turtle.home = oData.patch;
+    turtle.speed = AS.util.randomNormal(constants.iSpeed);
+}
+
+// the agent/turtle isn't assumed to want to move anywhere
+// in fact, chilling at home provides utility.
+// so let em decide where to go here.
+//
+// TODO: effort parameter multiplied by speed. bc they could get utility by providing submax effort.
+function fGetDesiredMovement(turtle) {
+    turtle.theta = 0;
+    turtle.forward(turtle.speed)
 }
