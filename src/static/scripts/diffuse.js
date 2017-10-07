@@ -13,13 +13,10 @@ class DiffuseModel extends AS.Model {
     setup() {
         // model config
         this.patchBreeds('homes jobs schools uninterestings')
-        this.turtleBreeds('bros gals')
-        this.population = 100
+        this.population = 1
         this.radius = 2
 
         this.turtles.setDefault('shape', 'triangle')
-        this.bros.setDefault('shape', 'triangle')
-        this.gals.setDefault('shape', 'triangle')
 
         this.cmap = AS.ColorMap.Rgb256
         this.iHighlightColor = .51;
@@ -27,6 +24,8 @@ class DiffuseModel extends AS.Model {
 
         // patch config
         this.patches.own('ran ds') // arbitray agent property names
+        this.turtles.setDefault('speed', 0.3)
+        //this.turtles.setDefault('breed', this.uninterestings)
         this.patches.ask(p => {
             p.setBreed(this.uninterestings)
         })
@@ -40,11 +39,7 @@ class DiffuseModel extends AS.Model {
         // randomly select patches to spawn ('sprout') agents === turtles
         // TODO: a better model would have an increased chance of a person spawning next to another person rather than an even distribution of starting anywhere
         this.patches.nOf(this.population).ask(patch => {
-            var sBreed = (AS.util.randomFloat(1.0) < .5) ? 'bros' : 'gals';
-
-            //patch.sprout(1, this[sBreed], turtle => {
             patch.sprout(1, this.turtles, turtle => {
-                //debugger  // TODO: why this never hits for this[sBreed] ?
                 turtle.patch.setBreed(this.homes)
             })
         })
@@ -54,6 +49,7 @@ class DiffuseModel extends AS.Model {
         })
 
         // turtle === agent config
+        //this.turtles.own('speed') // arbitray agent property names
         this.turtles.setDefault('speed', 0.3)
         this.turtles.setDefault('size', 1)
         this.turtles.setDefault('age', AS.util.randomInt(76)) // US national med age ~ 38
@@ -78,7 +74,7 @@ class DiffuseModel extends AS.Model {
         */
 
         this.turtles.ask((turtle) => {
-            turtle.theta += AS.util.randomCentered(0.1)
+            turtle.theta = 0;// += AS.util.randomCentered(0.1)
             turtle.forward(turtle.speed)
 
             this.patches.inRadius(turtle.patch, this.radius, true).ask(patch => {
@@ -103,12 +99,7 @@ class DiffuseModel extends AS.Model {
     }
 }
 
-const options = AS.Model.defaultWorld(2, 50)
-options.minX = 2 * options.minX
-options.maxX = 2 * options.maxY
-const model = new DiffuseModel(document.body, options)
-model.setup()
-model.start()
+module.exports = DiffuseModel;
 
 // in order by regression theorem; following settler history
 // buildHomes
@@ -125,20 +116,5 @@ function identifyPatchType(patch, _model) {
     }
     else if (AS.util.randomInt(100) < iDensity) {
         patch.setBreed(_model.schools)
-    }
-}
-
-/* TODO: move code below to app.js. here for convenience only. */
-
-// TODO: on keydown, not click, this is super annoying
-var MouseControl = function () {
-    this.stopped = false;
-};
-
-window.onclick = function () {
-    if (model.anim.stopped) {
-        model.anim.start()
-    } else {
-        model.anim.stop()
     }
 }
