@@ -9,4 +9,14 @@ AS.testWf = function() {
     console.log('wild fork is here');
 }
 
+AS.randomNormalFloored = function(iAverage, iStandardDeviation, iFloor) {
+    iFloor = iFloor || 0;
+    return Math.max(AS.util.randomNormal(iAverage, iStandardDeviation), iFloor)
+}
+
+// assumes a flat distrobution
+AS.randomFromArray = function(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
 module.exports = AS;

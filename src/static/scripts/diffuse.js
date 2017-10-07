@@ -26,9 +26,12 @@ model.reset() doesn't seem to work as expected. model.setup() resets the data st
 */
 
 const constants = {
+    arrsFirstNames: ['John', 'Mike', 'Katie', 'Jessie', 'David', 'Cheryl', 'Tina', 'Todd', 'Jimmy', 'Owen', 'Connor'],
+    arrsLastNames: ['Neutron', 'Johns', 'Trump', 'Obama', 'Axtell', 'Densmore', 'Frost'],
     iAverageAge: 38, // median us age
     iAgeStandardDeviation: 10, //totally made up
-    iSpeed: 2.5  // arbitrary normal targeted at a human-watcheable speed
+    iGeneric: 2.5,  // arbitrary normal targeted at a human-watcheable speed
+    iGenericStandardDeviation: .5
 }
 
 class DiffuseModel extends AS.Model {
@@ -136,10 +139,20 @@ function identifyPatchType(patch, _model) {
     }
 }
 
+//  TODO: diminishing marginal utility of consumption, and consumption by kind
+//          also maybe go some place to consume. right now they consume anywhere
+//  TODO: make productivity multi-specific; right now it's used both for search and MLP / wage outcomes
+//  TODO: plausibly unfloor productivity, money, and leisureUtility. Anything else?
+//  TODO: skew age.
 function fInitTurtle(turtle, oData) {
     turtle.age = AS.util.randomNormal(constants.iAverageAge, constants.iAverageAge);
+    turtle.consumptionUtility = AS.util.randomNormal(constants.iGeneric);
     turtle.home = oData.patch;
-    turtle.speed = AS.util.randomNormal(constants.iSpeed);
+    turtle.leisureUtility = AS.util.randomNormal(constants.iGeneric);
+    turtle.money = AS.util.randomNormal(constants.iGeneric);
+    turtle.name = AS.randomFromArray(constants.arrsFirstNames) + ' ' + AS.randomFromArray(constants.arrsLastNames);
+    turtle.productivity = AS.util.randomNormal(constants.iGeneric);
+    turtle.speed = AS.util.randomNormal(constants.iGeneric);
 }
 
 // the agent/turtle isn't assumed to want to move anywhere
