@@ -15,7 +15,8 @@ module.exports = {
         filename: 'app.bundle.js'
     },
     devServer: {
-        contentBase: sDist
+        contentBase: sDist,
+        port: 8080
     },
     plugins: [
     new HtmlWebpackPlugin({
