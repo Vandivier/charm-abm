@@ -16,6 +16,7 @@ function initModel() {
     options.maxX = 2 * options.maxY
 
     const model = new DiffuseModel(document.body, options)
+    window.model = model; //facilitate debugging
 
     model.setup()
     model.start()
