@@ -24,7 +24,7 @@
     "debug": "webpack -d --display-error-details",
     "prod": "webpack -p",
     "start": "webpack -d && rm -rf dist/static && cp -r src/static dist/static && cp src/favicon.ico dist/favicon.ico && node ./bin/www",
-    "watch": "sane 'npm run build-models' './models/src/' & sane 'npm run build-dist' './src/'"
+    "watch": "webpack --watch"
   },
   "dependencies": {
     "asx-abm": "^0.3.2",
@@ -36,7 +36,6 @@
     "asx-abm": "^0.3.4",
     "express": "^4.15.5",
     "html-webpack-plugin": "^2.30.1",
-    "sane": "^1.6.0",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.8.2"
   }
