@@ -23,6 +23,8 @@ TODO: pass constants from app.js
 
 notes:
 model.reset() doesn't seem to work as expected. model.setup() resets the data state but not camera angle
+a tick in this model is supposed to represent an hour
+
 */
 
 const constants = {
@@ -142,17 +144,18 @@ function identifyPatchType(patch, _model) {
 //  TODO: diminishing marginal utility of consumption, and consumption by kind
 //          also maybe go some place to consume. right now they consume anywhere
 //  TODO: make productivity multi-specific; right now it's used both for search and MLP / wage outcomes
-//  TODO: plausibly unfloor productivity, money, and leisureUtility. Anything else?
 //  TODO: skew age.
+//  TODO: may want to ensure turtles don't have 0 values, but odds = 0
 function fInitTurtle(turtle, oData) {
-    turtle.age = AS.util.randomNormal(constants.iAverageAge, constants.iAverageAge);
-    turtle.consumptionUtility = AS.util.randomNormal(constants.iGeneric);
+    const arrsNormals = ['money', 'productivity'];
+    const arrsFlooredNormals = ['consumptionUtility', 'leisureUtility', 'speed'];
+
+    AS.util.assignNormals(turtle, arrsNormals, constants.iGeneric, constants.iGenericStandardDeviation);
+    AS.util.assignFlooredNormals(turtle, arrsFlooredNormals, constants.iGeneric, constants.iGenericStandardDeviation);
+
+    turtle.age = AS.util.randomNormal(constants.iAverageAge, constants.iAgeStandardDeviation);
     turtle.home = oData.patch;
-    turtle.leisureUtility = AS.util.randomNormal(constants.iGeneric);
-    turtle.money = AS.util.randomNormal(constants.iGeneric);
-    turtle.name = AS.randomFromArray(constants.arrsFirstNames) + ' ' + AS.randomFromArray(constants.arrsLastNames);
-    turtle.productivity = AS.util.randomNormal(constants.iGeneric);
-    turtle.speed = AS.util.randomNormal(constants.iGeneric);
+    turtle.name = AS.util.randomFromArray(constants.arrsFirstNames) + ' ' + AS.util.randomFromArray(constants.arrsLastNames);
 }
 
 // the agent/turtle isn't assumed to want to move anywhere
@@ -160,7 +163,13 @@ function fInitTurtle(turtle, oData) {
 // so let em decide where to go here.
 //
 // TODO: effort parameter multiplied by speed. bc they could get utility by providing submax effort.
+// TODO: given current location and target location, return theta.
+//  ref: model.turtles.inPatchRect()
 function fGetDesiredMovement(turtle) {
+    let patchPreferredDestination = turtle.home;
+    let patchCurrentLocation = turtle.patch;
+    let bWantsToMove = (patchPreferredDestination.id !== patchCurrentLocation.id);
+
     turtle.theta = 0;
-    turtle.forward(turtle.speed)
+    turtle.forward(bWantsToMove ? turtle.speed: 0);
 }

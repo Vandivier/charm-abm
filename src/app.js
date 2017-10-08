@@ -5,12 +5,9 @@ var DiffuseModel = require('./static/scripts/diffuse.js');
 
 function main() {
     initModel();
-    AS.testWf();
 }
 
 function initModel() {
-    //AS.util.setScript('static/scripts/diffuse.js');
-
     const options = AS.Model.defaultWorld(2, 50)
     options.minX = 2 * options.minX
     options.maxX = 2 * options.maxY
