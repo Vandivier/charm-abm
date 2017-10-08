@@ -43,7 +43,7 @@ class DiffuseModel extends AS.Model {
         this.population = 1
         this.radius = 2
 
-        this.turtles.setDefault('shape', 'triangle')
+        this.turtles.setDefault('shape', 'circle')
 
         this.cmap = AS.ColorMap.Rgb256
         this.iHighlightColor = .51;
@@ -170,6 +170,6 @@ function fGetDesiredMovement(turtle) {
     let patchCurrentLocation = turtle.patch;
     let bWantsToMove = (patchPreferredDestination.id !== patchCurrentLocation.id);
 
-    turtle.theta = 0;
+    turtle.theta = AS.util.adjustedTheta(turtle, patchPreferredDestination);
     turtle.forward(bWantsToMove ? turtle.speed: 0);
 }
