@@ -21,6 +21,10 @@ TODO: pass constants from app.js
 //  ref: http://www.statisticsblog.com/2015/10/random-samples-in-js-using-r-functions/
 //  ref: https://github.com/Mattasher/probability-distributions/blob/master/index.js
 
+angles
+//  ref: https://evanw.github.io/lightgl.js/docs/vector.html
+//  ref: http://victorjs.org/
+
 notes:
 model.reset() doesn't seem to work as expected. model.setup() resets the data state but not camera angle
 a tick in this model is supposed to represent an hour
@@ -169,7 +173,10 @@ function fGetDesiredMovement(turtle) {
     let patchPreferredDestination = turtle.home;
     let patchCurrentLocation = turtle.patch;
     let bWantsToMove = (patchPreferredDestination.id !== patchCurrentLocation.id);
+    let iSpeed = (bWantsToMove ? turtle.speed: 0);
 
-    turtle.theta = AS.util.adjustedTheta(turtle, patchPreferredDestination);
-    turtle.forward(bWantsToMove ? turtle.speed: 0);
+    if (bWantsToMove) {
+        AS.util.faceCenter(turtle, patchPreferredDestination);
+        turtle.forward(iSpeed);
+    }
 }

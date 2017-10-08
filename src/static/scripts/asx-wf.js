@@ -31,31 +31,17 @@ AS.util.assignFlooredNormals = function(turtle, sArr, iAverage, iStandardDeviati
     })
 }
 
-//  the 'adjusted' part refers to the fact that patch.x, patch.y is the corner of the region.
-//  this function assumes a width/l/h of 1, so the adjustment is .5 to get the center coordinate
-//  similarly, turtles need to be adjusted for size
-//  we assume a turtle is going to a destination with this method
-//  the result theta comes from the middle of turtle going to the middle of a patch
-AS.util.adjustedTheta = function(turtleFrom, patchTo) {
-    let iAgentSizeAdjustment = turtleFrom.size / 2;
-    let iFromX = turtleFrom.x + iAgentSizeAdjustment;
-    let iFromY = turtleFrom.y + iAgentSizeAdjustment;
-    let iToX = patchTo.x + .5;
-    let iToY = patchTo.y + .5;
+// this method faces the center of an agent instead of it's corner as in AS.Core:
+//  face (agent) { this.theta = this.towards(agent); }
+AS.util.faceCenter = function(agentToTurn, agentToFace) {
+    let vSize = agentToFace.size;
 
-    return AS.util.fiCalculatetheta(iFromX, iFromY, iToX, iToY);
-}
-
-// ref: https://stackoverflow.com/questions/9614109/how-to-calculate-an-angle-from-points
-// ref: https://www.w3schools.com/jsref/jsref_atan2.asp
-AS.util.fiCalculatetheta = function(iFromX, iFromY, iToX, iToY) {
-    let iFromTan = Math.atan2(iFromY, iFromX);
-    let iToTan = Math.atan2(iToY, iToX);
-
-    //let x = (iFromX - iToX);
-    //let y = (iFromY - iToY);
-
-    return iFromTan - iToTan;
+    if (typeof vSize === 'undefined') { // it's a patch, assume size = 1
+        agentToTurn.faceXY(agentToFace.x + .5, agentToFace.y + .5);
+    } else {
+        agentToTurn.faceXY(agentToFace.x + vSize / 2,
+                           agentToFace.y + vSize / 2);
+    }
 }
 
 module.exports = AS;
