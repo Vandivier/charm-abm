@@ -33,7 +33,7 @@ a tick in this model is supposed to represent an hour
 
 const constants = {
     arrsFirstNames: ['John', 'Mike', 'Katie', 'Jessie', 'David', 'Cheryl', 'Tina', 'Todd', 'Jimmy', 'Owen', 'Connor'],
-    arrsLastNames: ['Neutron', 'Johns', 'Trump', 'Obama', 'Axtell', 'Densmore', 'Frost'],
+    arrsLastNames: ['Neutron', 'Johns', 'Trump', 'Obama', 'Axtell', 'Densmore', 'Frost', 'Jones'],
     iAverageAge: 38, // median us age
     iAgeStandardDeviation: 10, //totally made up
     iGeneric: 2.5,  // arbitrary normal targeted at a human-watcheable speed
