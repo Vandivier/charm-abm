@@ -27,13 +27,12 @@
     "watch": "webpack --watch"
   },
   "dependencies": {
-    "asx-abm": "^0.3.2",
+    "asx-abm": "^0.3.4",
     "dat.gui": "github:dataarts/dat.gui",
     "stats.js": "^0.17.0",
     "three": "latest"
   },
   "devDependencies": {
-    "asx-abm": "^0.3.4",
     "express": "^4.15.5",
     "html-webpack-plugin": "^2.30.1",
     "webpack": "^3.6.0",
