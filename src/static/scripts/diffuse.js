@@ -43,7 +43,7 @@ const constants = {
 class DiffuseModel extends AS.Model {
     setup() {
         // model config
-        this.patchBreeds('homes jobs schools uninterestings')
+        //this.patchBreeds('homes jobs schools uninterestings')
         this.population = 1
         this.radius = 2
 
@@ -51,22 +51,17 @@ class DiffuseModel extends AS.Model {
 
         this.cmap = AS.ColorMap.Rgb256
         this.iHighlightColor = .51;
-        this.iTickoutLimit = 40;
+        this.iPathColorTickLimit = 40;
 
         // patch config
-        this.patches.own('ran ds') // arbitray agent property names
-        //this.turtles.setDefault('breed', this.uninterestings)
-        this.patches.ask(p => {
-            p.setBreed(this.uninterestings)
-        })
         this.patches.ask(patch => {
-            patch.ds = 0
-            patch.tickOutAgentWalk = 0
-            patch.originalColor = AS.util.randomFloat(1.0)
-            patch.ran = patch.originalColor
+            patch.iPathColorTicks = 0
+            patch.iOriginalColor = AS.util.randomFloat(1.0)
+            patch.iPathColor = patch.iOriginalColor
         })
+
         // randomly select patches to spawn ('sprout') agents === turtles
-        // TODO: a better model would have an increased chance of a person spawning next to another person rather than an even distribution of starting anywhere
+        // TODO: a better model would have an increased chance of a person spawning next to another person rather than an even distribution of starting anywhere, or allow 1 patch to be home of multiple people (random draw w replacement, maybe it's doing so)
         this.patches.nOf(this.population).ask(patch => {
             patch.sprout(1, this.turtles, turtle => {
                 fInitTurtle(turtle, {
@@ -74,11 +69,8 @@ class DiffuseModel extends AS.Model {
                 })
             })
         })
-        this.uninterestings.ask(uninteresting => {
-            identifyPatchType(uninteresting, this);
-        })
 
-        // turtle config === agent config
+        // turtle config
         this.turtles.setDefault('size', 1)
     }
 
@@ -104,24 +96,24 @@ class DiffuseModel extends AS.Model {
             fGetDesiredMovement(turtle);
 
             this.patches.inRadius(turtle.patch, this.radius, true).ask(patch => {
-                patch.ran = this.iHighlightColor;
+                patch.iPathColor = this.iHighlightColor;
             })
 
         })
 
-        // reset back to originalColor after 5 ticks
+        // reset back to iOriginalColor after 5 ticks
         this.patches.ask(patch => {
-            if (patch.ran !== patch.originalColor) {
-                patch.tickOutAgentWalk++
+            if (patch.iPathColor !== patch.iOriginalColor) {
+                patch.iPathColorTicks++
 
-                if (patch.tickOutAgentWalk === this.iTickoutLimit) {
-                    patch.ran = patch.originalColor;
-                    patch.tickOutAgentWalk = 0;
+                if (patch.iPathColorTicks === this.iPathColorTickLimit) {
+                    patch.iPathColor = patch.iOriginalColor;
+                    patch.iPathColorTicks = 0;
                 }
             }
         })
 
-        this.patches.diffuse('ran', 0, this.cmap) // TODO: some other way to do this? I don't need diffuse.
+        this.patches.diffuse('iPathColor', 0, this.cmap) // TODO: some other way to do this? I don't need diffuse.
     }
 }
 
