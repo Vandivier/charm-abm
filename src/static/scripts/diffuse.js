@@ -29,6 +29,8 @@ notes:
 model.reset() doesn't seem to work as expected. model.setup() resets the data state but not camera angle
 a tick in this model is supposed to represent an hour
 
+// TODO: parallel. possibly via Node workers, webworkers, or https://github.com/Microsoft/napajs
+
 */
 
 const constants = {
@@ -37,19 +39,20 @@ const constants = {
     iAverageAge: 38, // median us age
     iAgeStandardDeviation: 10, //totally made up
     iGeneric: 2.5,  // arbitrary normal targeted at a human-watcheable speed
-    iGenericStandardDeviation: .5
+    iGenericStandardDeviation: .5,
+    iPercentPatchesWithJob: .1,
+    iPercentPatchesWithSchool: .01
 }
 
 class DiffuseModel extends AS.Model {
     setup() {
         // model config
-        //this.patchBreeds('homes jobs schools uninterestings')
         this.population = 1
         this.radius = 2
 
         this.turtles.setDefault('shape', 'circle')
 
-        this.cmap = AS.ColorMap.Rgb256
+        this.cmap = AS.ColorMap.Rgb256;
         this.iHighlightColor = .51;
         this.iPathColorTickLimit = 40;
 
@@ -58,6 +61,25 @@ class DiffuseModel extends AS.Model {
             patch.iPathColorTicks = 0
             patch.iOriginalColor = AS.util.randomFloat(1.0)
             patch.iPathColor = patch.iOriginalColor
+
+            if (AS.util.randomFloat(1.0) < constants.iPercentPatchesWithJob) {
+                patch.jobData = {};
+                AS.util.assignNormals(patch.jobData,
+                                      ['reputation',
+                                      'wages',
+                                      'educatedBonusWages'],
+                                      constants.iGeneric,
+                                      constants.iGenericStandardDeviation);
+            }
+
+            if (AS.util.randomFloat(1.0) < constants.iPercentPatchesWithSchool) {
+                patch.schoolData = {};
+                AS.util.assignNormals(patch.schoolData,
+                                      ['reputation',
+                                      'price'],
+                                      constants.iGeneric,
+                                      constants.iGenericStandardDeviation);
+            }
         })
 
         // randomly select patches to spawn ('sprout') agents === turtles
@@ -144,7 +166,7 @@ function identifyPatchType(patch, _model) {
 //  TODO: may want to ensure turtles don't have 0 values, but odds = 0
 function fInitTurtle(turtle, oData) {
     const arrsNormals = ['money', 'productivity'];
-    const arrsFlooredNormals = ['consumptionUtility', 'leisureUtility', 'speed'];
+    const arrsFlooredNormals = ['consumptionUtility', 'leisureUtility', 'speed', 'timePreference'];
 
     AS.util.assignNormals(turtle, arrsNormals, constants.iGeneric, constants.iGenericStandardDeviation);
     AS.util.assignFlooredNormals(turtle, arrsFlooredNormals, constants.iGeneric, constants.iGenericStandardDeviation);
@@ -162,13 +184,18 @@ function fInitTurtle(turtle, oData) {
 // TODO: given current location and target location, return theta.
 //  ref: model.turtles.inPatchRect()
 function fGetDesiredMovement(turtle) {
-    let patchPreferredDestination = turtle.home;
+    let bWantsToMove;
+    //let iSpeed = 0;
+    let patchPreferredDestination;
     let patchCurrentLocation = turtle.patch;
-    let bWantsToMove = (patchPreferredDestination.id !== patchCurrentLocation.id);
-    let iSpeed = (bWantsToMove ? turtle.speed: 0);
+
+    patchPreferredDestination = turtle.home;
+
+    bWantsToMove = (patchPreferredDestination.id !== patchCurrentLocation.id);
 
     if (bWantsToMove) {
+        //iSpeed = turtle.speed;
         AS.util.faceCenter(turtle, patchPreferredDestination);
-        turtle.forward(iSpeed);
+        turtle.forward(turtle.speed);
     }
 }
