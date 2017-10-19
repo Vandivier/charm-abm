@@ -21,4 +21,18 @@ Stop and start the model by clicking.
 * [CI and test Cypress](https://docs.cypress.io/guides/guides/continuous-integration.html#)
 
 ## Lessons Learned
-* webpack-dev-server doesn't currently work with static externals. Instead, `cp` with bash to build and serve via Express.
+1. webpack-dev-server doesn't currently work with static externals. Instead, `cp` with bash to build and serve via Express.
+1. patch and turtle breeds are wonky within asx, and non-binding. Using POJOs is easier and more semantic.
+
+## Model Issues
+1. Years of experience does not give a premium
+1. Education, intelligence, and skills are not multi-specific
+1. People don't form families, have children, or die
+1. Education is a boolean
+1. There is only one consumption good
+1. People only have leisure, time, and consumption preference
+1. Savings and investment are exogenous and homogenous
+1. Home, job, and school locations are iird
+1. Seed values are largely exogenous and arbitrary
+1. Capital doesn't really exist
+1. Form organization and processes are ignored
