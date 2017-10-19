@@ -61,6 +61,7 @@ class DiffuseModel extends AS.Model {
             patch.iPathColorTicks = 0
             patch.iOriginalColor = AS.util.randomFloat(1.0)
             patch.iPathColor = patch.iOriginalColor
+            patch.model = this;
 
             if (AS.util.randomFloat(1.0) < constants.iPercentPatchesWithJob) {
                 patch.jobData = {};
@@ -87,7 +88,8 @@ class DiffuseModel extends AS.Model {
         this.patches.nOf(this.population).ask(patch => {
             patch.sprout(1, this.turtles, turtle => {
                 fInitTurtle(turtle, {
-                    patch: patch
+                    'model': this,
+                    'patch': patch
                 })
             })
         })
@@ -116,6 +118,8 @@ class DiffuseModel extends AS.Model {
 
         this.turtles.ask((turtle) => {
             fGetDesiredMovement(turtle);
+
+            turtle.iLifetimeUtility += turtle.iUtilityPerTick;
 
             this.patches.inRadius(turtle.patch, this.radius, true).ask(patch => {
                 patch.iPathColor = this.iHighlightColor;
@@ -155,7 +159,10 @@ function fInitTurtle(turtle, oData) {
 
     turtle.age = AS.util.randomNormal(constants.iAverageAge, constants.iAgeStandardDeviation);
     turtle.curiosity = AS.util.randomFloat(1.0); // probability to consider school or a new job
+    turtle.iUtilityPerTick = turtle.leisureUtility; // by default turtle is leisurely at home
     turtle.home = oData.patch;
+    turtle.patchPreferredDestination = turtle.home; // default to leisure before considering alternatives
+    turtle.model = oData.model;
     turtle.name = AS.util.randomFromArray(constants.arrsFirstNames) + ' ' + AS.util.randomFromArray(constants.arrsLastNames);
 }
 
@@ -163,25 +170,29 @@ function fInitTurtle(turtle, oData) {
 // in fact, chilling at home provides utility.
 // so let em decide where to go here.
 //
-// by default the individual prefers to go home and have leisure.
-// then the individual considers school or a job
-//
+// by default the individual prefers to continue doing whatever they are currently doing
 //
 // TODO: effort parameter multiplied by speed. bc they could get utility by providing submax effort.
 // TODO: given current location and target location, return theta.
 //  ref: model.turtles.inPatchRect()
 function fGetDesiredMovement(turtle) {
-    let bWantsToMove;
-    let iUtility = turtle.leisureUtility;
-    let patchPreferredDestination = turtle.home;
-    let patchCurrentLocation = turtle.patch;
+    let arrJobs = turtle.model.patches.filter(function(patch){ return patch.jobData });
+    let arrSchools = turtle.model.patches.filter(function(patch){ return patch.schoolData });
+    let oJobToConsider = AS.util.randomFromArray(arrJobs);
+    let oSchoolToConsider = AS.util.randomFromArray(arrSchools);
 
-    patchPreferredDestination = turtle.home;
+    if (turtle.iUtilityPerTick < turtle.leisureUtility) { // always consider going home
+        turtle.patchPreferredDestination = turtle.home;
+        turtle.iUtilityPerTick = turtle.leisureUtility;
+    }
 
-    bWantsToMove = (patchPreferredDestination.id !== patchCurrentLocation.id);
+    // TODO: different path color when moving to school vs work vs home
+    if (AS.util.randomFloat(1.0) < turtle.curiosity) { // search for other utility sources like school or a job
+        //console.log(oJobToConsider, oSchoolToConsider);
+    }
 
-    if (bWantsToMove) {
-        AS.util.faceCenter(turtle, patchPreferredDestination);
+    if (turtle.patchPreferredDestination.id !== turtle.patch.id) { // agent wants to move
+        AS.util.faceCenter(turtle, turtle.patchPreferredDestination);
         turtle.forward(turtle.speed);
     }
 }
