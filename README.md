@@ -37,3 +37,4 @@ Stop and start the model by clicking.
 1. Capital doesn't really exist
 1. Form organization and processes are ignored
 1. Diminishing marginal values are nowhere
+1. Curiosity is exogenous and random

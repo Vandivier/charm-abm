@@ -141,24 +141,6 @@ class DiffuseModel extends AS.Model {
 
 module.exports = DiffuseModel;
 
-// in order by regression theorem; following settler history
-// buildHomes
-// buildJobs
-// buildSchools
-// logic problem: currently a patch must be one class or another, not multiple
-// eg a patch cannot be a workplace and a home or school.
-// TODO: schools and jobs more likely to exist when neighboring a home
-function identifyPatchType(patch, _model) {
-    const iDensity = 92.5;
-
-    if (AS.util.randomInt(100) < iDensity) {
-        patch.setBreed(_model.jobs)
-    }
-    else if (AS.util.randomInt(100) < iDensity) {
-        patch.setBreed(_model.schools)
-    }
-}
-
 //  TODO: diminishing marginal utility of consumption, and consumption by kind
 //          also maybe go some place to consume. right now they consume anywhere
 //  TODO: make productivity multi-specific; right now it's used both for search and MLP / wage outcomes
@@ -172,6 +154,7 @@ function fInitTurtle(turtle, oData) {
     AS.util.assignFlooredNormals(turtle, arrsFlooredNormals, constants.iGeneric, constants.iGenericStandardDeviation);
 
     turtle.age = AS.util.randomNormal(constants.iAverageAge, constants.iAgeStandardDeviation);
+    turtle.curiosity = AS.util.randomFloat(1.0); // probability to consider school or a new job
     turtle.home = oData.patch;
     turtle.name = AS.util.randomFromArray(constants.arrsFirstNames) + ' ' + AS.util.randomFromArray(constants.arrsLastNames);
 }
@@ -180,13 +163,17 @@ function fInitTurtle(turtle, oData) {
 // in fact, chilling at home provides utility.
 // so let em decide where to go here.
 //
+// by default the individual prefers to go home and have leisure.
+// then the individual considers school or a job
+//
+//
 // TODO: effort parameter multiplied by speed. bc they could get utility by providing submax effort.
 // TODO: given current location and target location, return theta.
 //  ref: model.turtles.inPatchRect()
 function fGetDesiredMovement(turtle) {
     let bWantsToMove;
-    //let iSpeed = 0;
-    let patchPreferredDestination;
+    let iUtility = turtle.leisureUtility;
+    let patchPreferredDestination = turtle.home;
     let patchCurrentLocation = turtle.patch;
 
     patchPreferredDestination = turtle.home;
@@ -194,7 +181,6 @@ function fGetDesiredMovement(turtle) {
     bWantsToMove = (patchPreferredDestination.id !== patchCurrentLocation.id);
 
     if (bWantsToMove) {
-        //iSpeed = turtle.speed;
         AS.util.faceCenter(turtle, patchPreferredDestination);
         turtle.forward(turtle.speed);
     }
