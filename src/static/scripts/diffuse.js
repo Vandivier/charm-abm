@@ -9,6 +9,8 @@ need sugarscape-like eat or die; lifespan. maybe later procreate w generations
 https://github.com/backspaces/asx/blob/38d3e2bd945cdfdeed367ba587533f23cfba13c9/docs/models/scripts/exit.js
 
 TODO: pass constants from app.js
+TODO: definition of equilibrium (I think whole economy growth rate works. or everyone dies or no one getting educated)
+TODO: collect statistics and identify relationship of interest. I think factors of getting educated is interesting.
 
 //  TODO: utils.randomFromDistrobution() and utils.randomSkewed(); eg for age
 //  ref: https://www.npmjs.com/package/skew-normal-random
@@ -31,6 +33,7 @@ a tick in this model is supposed to represent an hour
 
 // TODO: parallel. possibly via Node workers, webworkers, or https://github.com/Microsoft/napajs
 
+// TODO: better use of work and school reputation
 */
 
 const constants = {
@@ -41,7 +44,8 @@ const constants = {
     iGeneric: 2.5,  // arbitrary normal targeted at a human-watcheable speed
     iGenericStandardDeviation: .5,
     iPercentPatchesWithJob: .1,
-    iPercentPatchesWithSchool: .01
+    iPercentPatchesWithSchool: .01,
+    iTicksToBecomeEducated: 60 // suppose it's months and 5 years is the average.
 }
 
 class DiffuseModel extends AS.Model {
@@ -66,9 +70,9 @@ class DiffuseModel extends AS.Model {
             if (AS.util.randomFloat(1.0) < constants.iPercentPatchesWithJob) {
                 patch.jobData = {};
                 AS.util.assignNormals(patch.jobData,
-                                      ['reputation',
-                                      'wages',
-                                      'educatedBonusWages'],
+                                      ['educatedBonusWages',
+                                       'reputation', // really, represents all nonpecuniary benefits including reputation
+                                       'wages'],
                                       constants.iGeneric,
                                       constants.iGenericStandardDeviation);
             }
@@ -76,11 +80,26 @@ class DiffuseModel extends AS.Model {
             if (AS.util.randomFloat(1.0) < constants.iPercentPatchesWithSchool) {
                 patch.schoolData = {};
                 AS.util.assignNormals(patch.schoolData,
-                                      ['reputation',
-                                      'price'],
+                                      ['price',
+                                       'reputation',
+                                       'suffering'],
                                       constants.iGeneric,
                                       constants.iGenericStandardDeviation);
             }
+        })
+
+        this.patches.filter(function(patch){
+                return patch.jobData
+        })
+        .map((patchWithJob, i) => {
+            patchWithJob.jobData.jobId = i; // use index as unique id
+        })
+
+        this.patches.filter(function(patch){
+                return patch.schoolData
+        })
+        .map((patchWithSchool, i) => {
+            patchWithSchool.schoolData.schoolId = i; // use index as unique id
         })
 
         // randomly select patches to spawn ('sprout') agents === turtles
@@ -117,7 +136,12 @@ class DiffuseModel extends AS.Model {
         */
 
         this.turtles.ask((turtle) => {
-            fGetDesiredMovement(turtle);
+            if (Number.isInteger(turtle.iTicksInSchool)) {
+                fGetEducated(turtle);
+            }
+            else { // TODO: bad business rule: exclusivity of fGetEducated vs fGetDesiredMovement
+                fGetDesiredMovement(turtle);
+            }
 
             turtle.iLifetimeUtility += turtle.iUtilityPerTick;
 
@@ -150,6 +174,7 @@ module.exports = DiffuseModel;
 //  TODO: make productivity multi-specific; right now it's used both for search and MLP / wage outcomes
 //  TODO: skew age.
 //  TODO: may want to ensure turtles don't have 0 values, but odds = 0
+//  TODO: should we consider an energy-oriented approach to action? Where the person has and spends energy on work and other tasks like search.
 function fInitTurtle(turtle, oData) {
     const arrsNormals = ['money', 'productivity'];
     const arrsFlooredNormals = ['consumptionUtility', 'leisureUtility', 'speed', 'timePreference'];
@@ -174,12 +199,15 @@ function fInitTurtle(turtle, oData) {
 //
 // TODO: effort parameter multiplied by speed. bc they could get utility by providing submax effort.
 // TODO: given current location and target location, return theta.
+// TODO: individual memory (sccum / decum) of work and school. In particular: average wages w and without education in order to provide for getting an education even if unemployed
 //  ref: model.turtles.inPatchRect()
 function fGetDesiredMovement(turtle) {
     let arrJobs = turtle.model.patches.filter(function(patch){ return patch.jobData });
     let arrSchools = turtle.model.patches.filter(function(patch){ return patch.schoolData });
-    let oJobToConsider = AS.util.randomFromArray(arrJobs);
+    let patchJobToConsider = AS.util.randomFromArray(arrJobs);
     let oSchoolToConsider = AS.util.randomFromArray(arrSchools);
+    let iProspectiveWages = patchJobToConsider.jobData.wages
+                            + patchJobToConsider.jobData.reputation;
 
     if (turtle.iUtilityPerTick < turtle.leisureUtility) { // always consider going home
         turtle.patchPreferredDestination = turtle.home;
@@ -188,11 +216,41 @@ function fGetDesiredMovement(turtle) {
 
     // TODO: different path color when moving to school vs work vs home
     if (AS.util.randomFloat(1.0) < turtle.curiosity) { // search for other utility sources like school or a job
-        //console.log(oJobToConsider, oSchoolToConsider);
+        if (turtle.isEducated) {
+            iProspectiveWages += patchJobToConsider.jobData.educatedBonusWages;
+        }
+
+        if (turtle.iUtilityPerTick < iProspectiveWages) { // TODO: switching costs, reputation, so many other things
+            turtle.patchPreferredDestination = patchJobToConsider;
+            turtle.job = patchJobToConsider.jobData;
+            turtle.iUtilityPerTick = iProspectiveWages;
+        }
+
+        if (!turtle.isEducated
+            && turtle.job
+            && turtle.school
+            && oSchoolToConsider.price < patchJobToConsider.jobData.educatedBonusWages
+            && turtle.money > oSchoolToConsider.price)
+        { // TODO: in the real world, unemployed folks go to school too. Also, comparing price to wages this way is not an economically valid business rule (need future payoffs). Also, consider school rep and the possibility of school transfers. Also, loans instead of cash.
+            turtle.money -= oSchoolToConsider.price;
+            turtle.school = oSchoolToConsider.schoolData;
+            turtle.patchPreferredDestination = oSchoolToConsider;
+            turtle.iTicksInSchool = 0;
+        }
     }
 
     if (turtle.patchPreferredDestination.id !== turtle.patch.id) { // agent wants to move
         AS.util.faceCenter(turtle, turtle.patchPreferredDestination);
         turtle.forward(turtle.speed);
+    }
+}
+
+function fGetEducated(turtle) {
+    turtle.iLifetimeUtility -= turtle.school.suffering;
+    turtle.iTicksInSchool++;
+
+    if (turtle.iTicksInSchool === constants.iTicksToBecomeEducated) {
+        turtle.isEducated = true;
+        delete turtle.iTicksInSchool;
     }
 }
