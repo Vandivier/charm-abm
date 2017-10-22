@@ -11,6 +11,9 @@ https://github.com/backspaces/asx/blob/38d3e2bd945cdfdeed367ba587533f23cfba13c9/
 TODO: pass constants from app.js
 TODO: definition of equilibrium (I think whole economy growth rate works. or everyone dies or no one getting educated)
 TODO: collect statistics and identify relationship of interest. I think factors of getting educated is interesting.
+TODO: multiple people can't have the same job
+TODO: why is no one getting educated...?
+TODO: perf. Now I get 5 fps with 20 agents
 
 //  TODO: utils.randomFromDistrobution() and utils.randomSkewed(); eg for age
 //  ref: https://www.npmjs.com/package/skew-normal-random
@@ -51,7 +54,7 @@ const constants = {
 class DiffuseModel extends AS.Model {
     setup() {
         // model config
-        this.population = 1
+        this.population = 20
         this.radius = 2
 
         this.turtles.setDefault('shape', 'circle')
