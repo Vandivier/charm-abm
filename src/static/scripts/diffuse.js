@@ -88,19 +88,19 @@ class DiffuseModel extends AS.Model {
             }
         })
 
-        this.patches.filter(function(patch){
+        this.patches.filter(function (patch) {
                 return patch.jobData
-        })
-        .map((patchWithJob, i) => {
-            patchWithJob.jobData.jobId = i; // use index as unique id
-        })
+            })
+            .map((patchWithJob, i) => {
+                patchWithJob.jobData.jobId = i; // use index as unique id
+            })
 
-        this.patches.filter(function(patch){
+        this.patches.filter(function (patch) {
                 return patch.schoolData
-        })
-        .map((patchWithSchool, i) => {
-            patchWithSchool.schoolData.schoolId = i; // use index as unique id
-        })
+            })
+            .map((patchWithSchool, i) => {
+                patchWithSchool.schoolData.schoolId = i; // use index as unique id
+            })
 
         // randomly select patches to spawn ('sprout') agents === turtles
         // TODO: a better model would have an increased chance of a person spawning next to another person rather than an even distribution of starting anywhere, or allow 1 patch to be home of multiple people (random draw w replacement, maybe it's doing so)
@@ -184,6 +184,7 @@ function fInitTurtle(turtle, oData) {
 
     turtle.age = AS.util.randomNormal(constants.iAverageAge, constants.iAgeStandardDeviation);
     turtle.curiosity = AS.util.randomFloat(1.0); // probability to consider school or a new job
+    turtle.iLifetimeUtility = 0;
     turtle.iUtilityPerTick = turtle.leisureUtility; // by default turtle is leisurely at home
     turtle.home = oData.patch;
     turtle.patchPreferredDestination = turtle.home; // default to leisure before considering alternatives
