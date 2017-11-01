@@ -14,6 +14,7 @@ TODO: collect statistics and identify relationship of interest. I think factors 
 TODO: multiple people can't have the same job
 TODO: why is no one getting educated...?
 TODO: perf. Now I get 5 fps with 20 agents
+TODO: parallel computation
 
 //  TODO: utils.randomFromDistrobution() and utils.randomSkewed(); eg for age
 //  ref: https://www.npmjs.com/package/skew-normal-random
@@ -48,28 +49,28 @@ const constants = {
     iGenericStandardDeviation: .5,
     iPercentPatchesWithJob: .1,
     iPercentPatchesWithSchool: .01,
-    iTicksToBecomeEducated: 60 // suppose it's months and 5 years is the average.
+    iTicksToBecomeEducated: 60, // suppose it's months and 5 years is the average.
+    iHighlightToHome: AS.Color.color(200, 0, 0), // red
+    iHighlightToSchool: AS.Color.color(0, 200, 0), // green
+    iHighlightToWork: AS.Color.color(0, 0, 200) // blue
 }
 
 class DiffuseModel extends AS.Model {
     setup() {
         // model config
-        this.population = 3
-        this.radius = 2
-
-        this.turtles.setDefault('shape', 'circle')
-
+        this.population = 3;
+        this.radius = 2;
+        this.turtles.setDefault('shape', 'circle');
         this.cmap = AS.ColorMap.Rgb256;
-        this.iHighlightColor = .51;
         this.iPathColorTickLimit = 40;
 
         // patch config
         this.patches.ask(patch => {
-            patch.iPathColorTicks = 0
-            patch.iOriginalColor = AS.util.randomFloat(1.0)
-            patch.iPathColor = patch.iOriginalColor
             patch.model = this;
+            patch.iPathColorTicks = 0;
+            patch.iOriginalColor = AS.Color.randomColor();
 
+            patch.setColor(patch.iOriginalColor);
             if (AS.util.randomFloat(1.0) < constants.iPercentPatchesWithJob) {
                 patch.jobData = {};
                 AS.util.assignNormals(patch.jobData,
@@ -148,25 +149,29 @@ class DiffuseModel extends AS.Model {
 
             turtle.iLifetimeUtility += turtle.iUtilityPerTick;
 
-            this.patches.inRadius(turtle.patch, this.radius, true).ask(patch => {
-                patch.iPathColor = this.iHighlightColor;
-            })
-
-        })
+            this.patches.inRadius(turtle.patch, this.radius, true)
+                .ask(patch => {
+                    patch.setColor(turtle.iActiveHighlight);
+                    //patch.iPathColor = turtle.iActiveHighlight;
+                });
+        });
 
         // reset back to iOriginalColor after 5 ticks
         this.patches.ask(patch => {
-            if (patch.iPathColor !== patch.iOriginalColor) {
+            if (patch.getColor() !== patch.iOriginalColor) {
                 patch.iPathColorTicks++
 
                 if (patch.iPathColorTicks === this.iPathColorTickLimit) {
-                    patch.iPathColor = patch.iOriginalColor;
+                    patch.setColor(patch.iOriginalColor);
+                    //patch.iPathColor = patch.iOriginalColor;
                     patch.iPathColorTicks = 0;
                 }
             }
-        })
 
-        this.patches.diffuse('iPathColor', 0, this.cmap) // TODO: some other way to do this? I don't need diffuse.
+//            patch.setColor();
+        });
+
+        //this.patches.diffuse('iPathColor', 0, this.cmap) // TODO: some other way to do this? I don't need diffuse.
     }
 }
 
@@ -188,11 +193,14 @@ function fInitTurtle(turtle, oData) {
     turtle.age = AS.util.randomNormal(constants.iAverageAge, constants.iAgeStandardDeviation);
     turtle.curiosity = AS.util.randomFloat(1.0); // probability to consider school or a new job
     turtle.iLifetimeUtility = 0;
-    turtle.iUtilityPerTick = turtle.leisureUtility; // by default turtle is leisurely at home
     turtle.home = oData.patch;
-    turtle.patchPreferredDestination = turtle.home; // default to leisure before considering alternatives
     turtle.model = oData.model;
     turtle.name = AS.util.randomFromArray(constants.arrsFirstNames) + ' ' + AS.util.randomFromArray(constants.arrsLastNames);
+
+    // by default turtle is leisurely at home
+    turtle.iActiveHighlight = constants.iHighlightToHome;
+    turtle.iUtilityPerTick = turtle.leisureUtility;
+    turtle.patchPreferredDestination = turtle.home;
 }
 
 // the agent/turtle isn't assumed to want to move anywhere
@@ -215,18 +223,20 @@ function fGetDesiredMovement(turtle) {
 
     if (turtle.iUtilityPerTick < turtle.leisureUtility) { // always consider going home
         turtle.patchPreferredDestination = turtle.home;
+        turtle.iActiveHighlight = constants.iHighlightToHome;
         turtle.iUtilityPerTick = turtle.leisureUtility;
     }
 
     // TODO: different path color when moving to school vs work vs home
-    if (AS.util.randomFloat(1.0) < turtle.curiosity) { // search for other utility sources like school or a job
+    if (AS.util.randomFloat(1.0) < turtle.curiosity) { // search for other utility sources like school or a job. TODO: justify check order
         if (turtle.isEducated) {
             iProspectiveWages += patchJobToConsider.jobData.educatedBonusWages;
         }
 
         if (turtle.iUtilityPerTick < iProspectiveWages) { // TODO: switching costs, reputation, so many other things
-            turtle.patchPreferredDestination = patchJobToConsider;
             turtle.job = patchJobToConsider.jobData;
+            turtle.patchPreferredDestination = patchJobToConsider;
+            turtle.iActiveHighlight = constants.iHighlightToWork;
             turtle.iUtilityPerTick = iProspectiveWages;
         }
 
@@ -238,6 +248,7 @@ function fGetDesiredMovement(turtle) {
             turtle.money -= patchSchoolToConsider.schoolData.price;
             turtle.school = patchSchoolToConsider.schoolData;
             turtle.patchPreferredDestination = patchSchoolToConsider;
+            turtle.iActiveHighlight = constants.iHighlightToSchool;
             turtle.iTicksInSchool = 0;
         }
     }
