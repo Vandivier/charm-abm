@@ -44,4 +44,27 @@ AS.util.faceCenter = function(agentToTurn, agentToFace) {
     }
 }
 
+// wraps faceCenter by moving up to the target and not past it
+AS.util.approach = function(agentToTurn, agentToFace) {
+    let vSize = agentToFace.size;
+    let _x;
+    let _y;
+    let iDistanceRemaining;
+
+    if (typeof vSize === 'undefined') { // it's a patch, assume size = 1
+        _x = agentToFace.x + .5;
+        _y = agentToFace.y + .5;
+    } else {
+        _x = agentToFace.x + vSize / 2;
+        _y = agentToFace.y + vSize / 2;
+    }
+
+    agentToTurn.faceXY(_x, _y);
+    iDistanceRemaining = AS.util.distance(agentToFace.x,
+                                          agentToFace.y,
+                                          _x,
+                                          _y);
+    agentToTurn.forward(Math.min(agentToTurn.speed, iDistanceRemaining));
+}
+
 module.exports = AS;

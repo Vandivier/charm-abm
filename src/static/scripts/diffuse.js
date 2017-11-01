@@ -38,6 +38,8 @@ a tick in this model is supposed to represent an hour
 // TODO: parallel. possibly via Node workers, webworkers, or https://github.com/Microsoft/napajs
 
 // TODO: better use of work and school reputation
+
+// TODO: perf: use patch.typedColor instead of .setColor/.getColor()
 */
 
 const constants = {
@@ -58,7 +60,7 @@ const constants = {
 class DiffuseModel extends AS.Model {
     setup() {
         // model config
-        this.population = 3;
+        this.population = 1;
         this.radius = 2;
         this.turtles.setDefault('shape', 'circle');
         this.cmap = AS.ColorMap.Rgb256;
@@ -152,7 +154,6 @@ class DiffuseModel extends AS.Model {
             this.patches.inRadius(turtle.patch, this.radius, true)
                 .ask(patch => {
                     patch.setColor(turtle.iActiveHighlight);
-                    //patch.iPathColor = turtle.iActiveHighlight;
                 });
         });
 
@@ -163,15 +164,10 @@ class DiffuseModel extends AS.Model {
 
                 if (patch.iPathColorTicks === this.iPathColorTickLimit) {
                     patch.setColor(patch.iOriginalColor);
-                    //patch.iPathColor = patch.iOriginalColor;
                     patch.iPathColorTicks = 0;
                 }
             }
-
-//            patch.setColor();
         });
-
-        //this.patches.diffuse('iPathColor', 0, this.cmap) // TODO: some other way to do this? I don't need diffuse.
     }
 }
 
@@ -218,6 +214,7 @@ function fGetDesiredMovement(turtle) {
     let arrSchools = turtle.model.patches.filter(function(patch){ return patch.schoolData });
     let patchJobToConsider = AS.util.randomFromArray(arrJobs);
     let patchSchoolToConsider = AS.util.randomFromArray(arrSchools);
+    let iDistanceRemaining;
     let iProspectiveWages = patchJobToConsider.jobData.wages
                             + patchJobToConsider.jobData.reputation;
 
@@ -254,11 +251,15 @@ function fGetDesiredMovement(turtle) {
     }
 
     if (turtle.patchPreferredDestination.id !== turtle.patch.id) { // agent wants to move
-        AS.util.faceCenter(turtle, turtle.patchPreferredDestination);
-        turtle.forward(turtle.speed);
+        AS.util.approach(turtle, turtle.patchPreferredDestination);
+        turtle.bMoving = true;
+    } else {
+        turtle.bMoving = false;
     }
 }
 
+// TODO: check model.anim.ticks
+// I think they are getting instantly educated; this is a bug
 function fGetEducated(turtle) {
     turtle.iLifetimeUtility -= turtle.school.suffering;
     turtle.iTicksInSchool++;
