@@ -54,7 +54,7 @@ const constants = {
 class DiffuseModel extends AS.Model {
     setup() {
         // model config
-        this.population = 20
+        this.population = 3
         this.radius = 2
 
         this.turtles.setDefault('shape', 'circle')
@@ -209,7 +209,7 @@ function fGetDesiredMovement(turtle) {
     let arrJobs = turtle.model.patches.filter(function(patch){ return patch.jobData });
     let arrSchools = turtle.model.patches.filter(function(patch){ return patch.schoolData });
     let patchJobToConsider = AS.util.randomFromArray(arrJobs);
-    let oSchoolToConsider = AS.util.randomFromArray(arrSchools);
+    let patchSchoolToConsider = AS.util.randomFromArray(arrSchools);
     let iProspectiveWages = patchJobToConsider.jobData.wages
                             + patchJobToConsider.jobData.reputation;
 
@@ -232,13 +232,12 @@ function fGetDesiredMovement(turtle) {
 
         if (!turtle.isEducated
             && turtle.job
-            && turtle.school
-            && oSchoolToConsider.price < patchJobToConsider.jobData.educatedBonusWages
-            && turtle.money > oSchoolToConsider.price)
+            && patchSchoolToConsider.schoolData.price < patchJobToConsider.jobData.educatedBonusWages
+            && turtle.money > patchSchoolToConsider.schoolData.price)
         { // TODO: in the real world, unemployed folks go to school too. Also, comparing price to wages this way is not an economically valid business rule (need future payoffs). Also, consider school rep and the possibility of school transfers. Also, loans instead of cash.
-            turtle.money -= oSchoolToConsider.price;
-            turtle.school = oSchoolToConsider.schoolData;
-            turtle.patchPreferredDestination = oSchoolToConsider;
+            turtle.money -= patchSchoolToConsider.schoolData.price;
+            turtle.school = patchSchoolToConsider.schoolData;
+            turtle.patchPreferredDestination = patchSchoolToConsider;
             turtle.iTicksInSchool = 0;
         }
     }
