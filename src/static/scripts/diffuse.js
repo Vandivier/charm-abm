@@ -154,20 +154,22 @@ class DiffuseModel extends AS.Model {
             this.patches.inRadius(turtle.patch, this.radius, true)
                 .ask(patch => {
                     patch.setColor(turtle.iActiveHighlight);
+                    patch.iPathColorTicks = 1;
                 });
         });
 
-        // reset back to iOriginalColor after 5 ticks
-        this.patches.ask(patch => {
-            if (patch.getColor() !== patch.iOriginalColor) {
-                patch.iPathColorTicks++
-
+        // reset back to iOriginalColor after some ticks
+        this.patches
+            .filter(function (patch) {
+                return patch.iPathColorTicks;
+            })
+            .ask(patch => {
+                patch.iPathColorTicks++;
                 if (patch.iPathColorTicks === this.iPathColorTickLimit) {
                     patch.setColor(patch.iOriginalColor);
                     patch.iPathColorTicks = 0;
                 }
-            }
-        });
+            });
     }
 }
 
