@@ -262,20 +262,16 @@ function fGetEducated(turtle) {
         delete turtle.iTicksInSchool;
     }
 }
-
 // TODO: in the real world, unemployed folks go to school too. Also, comparing price to wages this way is not an economically valid business rule (need future payoffs). Also, consider school rep and the possibility of school transfers. Also, loans instead of cash.
 function fConsiderGoingToSchool(turtle, patchSchoolToConsider) {
-    if (!turtle.isEducated
-        && turtle.job
-        && patchSchoolToConsider.schoolData.price < patchJobToConsider.jobData.educatedBonusWages
-        && turtle.money > patchSchoolToConsider.schoolData.price)
-    {
-        return;
+    if (!turtle.isEducated &&
+        turtle.job &&
+        patchSchoolToConsider.schoolData.price < turtle.job.educatedBonusWages &&
+        turtle.money > patchSchoolToConsider.schoolData.price) {
+        turtle.money -= patchSchoolToConsider.schoolData.price;
+        turtle.school = patchSchoolToConsider.schoolData;
+        turtle.patchPreferredDestination = patchSchoolToConsider;
+        turtle.iActiveHighlight = constants.iHighlightToSchool;
+        turtle.iTicksInSchool = 0;
     }
-
-    turtle.money -= patchSchoolToConsider.schoolData.price;
-    turtle.school = patchSchoolToConsider.schoolData;
-    turtle.patchPreferredDestination = patchSchoolToConsider;
-    turtle.iActiveHighlight = constants.iHighlightToSchool;
-    turtle.iTicksInSchool = 0;
 }
