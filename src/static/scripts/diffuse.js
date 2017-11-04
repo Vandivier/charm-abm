@@ -123,7 +123,7 @@ class DiffuseModel extends AS.Model {
         this.turtles.setDefault('size', 1)
     }
 
-    // TODO: aging and dying agents
+    // TODO: aging and dying agents, collect statistics
     step() {
         /*
         if (this.done) return
@@ -181,6 +181,7 @@ module.exports = DiffuseModel;
 //  TODO: skew age.
 //  TODO: may want to ensure turtles don't have 0 values, but odds = 0
 //  TODO: should we consider an energy-oriented approach to action? Where the person has and spends energy on work and other tasks like search.
+//  TODO: these values are roughly linear but maybe shouldn't be; eg real time preference may not be a linear discount factor
 function fInitTurtle(turtle, oData) {
     const arrsNormals = ['money', 'productivity'];
     const arrsFlooredNormals = ['consumptionUtility', 'leisureUtility', 'speed', 'timePreference'];
@@ -239,17 +240,7 @@ function fGetDesiredMovement(turtle) {
             turtle.iUtilityPerTick = iProspectiveWages;
         }
 
-        if (!turtle.isEducated
-            && turtle.job
-            && patchSchoolToConsider.schoolData.price < patchJobToConsider.jobData.educatedBonusWages
-            && turtle.money > patchSchoolToConsider.schoolData.price)
-        { // TODO: in the real world, unemployed folks go to school too. Also, comparing price to wages this way is not an economically valid business rule (need future payoffs). Also, consider school rep and the possibility of school transfers. Also, loans instead of cash.
-            turtle.money -= patchSchoolToConsider.schoolData.price;
-            turtle.school = patchSchoolToConsider.schoolData;
-            turtle.patchPreferredDestination = patchSchoolToConsider;
-            turtle.iActiveHighlight = constants.iHighlightToSchool;
-            turtle.iTicksInSchool = 0;
-        }
+        fConsiderGoingToSchool(turtle, patchSchoolToConsider);
     }
 
     if (turtle.patchPreferredDestination.id !== turtle.patch.id) { // agent wants to move
@@ -270,4 +261,21 @@ function fGetEducated(turtle) {
         turtle.isEducated = true;
         delete turtle.iTicksInSchool;
     }
+}
+
+// TODO: in the real world, unemployed folks go to school too. Also, comparing price to wages this way is not an economically valid business rule (need future payoffs). Also, consider school rep and the possibility of school transfers. Also, loans instead of cash.
+function fConsiderGoingToSchool(turtle, patchSchoolToConsider) {
+    if (!turtle.isEducated
+        && turtle.job
+        && patchSchoolToConsider.schoolData.price < patchJobToConsider.jobData.educatedBonusWages
+        && turtle.money > patchSchoolToConsider.schoolData.price)
+    {
+        return;
+    }
+
+    turtle.money -= patchSchoolToConsider.schoolData.price;
+    turtle.school = patchSchoolToConsider.schoolData;
+    turtle.patchPreferredDestination = patchSchoolToConsider;
+    turtle.iActiveHighlight = constants.iHighlightToSchool;
+    turtle.iTicksInSchool = 0;
 }
