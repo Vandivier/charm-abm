@@ -6,10 +6,29 @@
 const AS = require('asx-abm');
 const utils = require('./utils');
 
-//  TODO: Math.max() vs redraw; and, should we allow === iFloor ?
+//  use soft floor by default
 AS.util.randomNormalFloored = function(iAverage, iStandardDeviation, iFloor) {
+    return AS.util.randomNormalFlooredSoft(iAverage, iStandardDeviation);
+}
+
+//  TODO: Math.max() vs redraw; and, should we allow === iFloor ?
+//  hard floor moves illegals to boundary
+AS.util.randomNormalFlooredHard = function(iAverage, iStandardDeviation, iFloor) {
     iFloor = iFloor || 0;
     return Math.max(AS.util.randomNormal(iAverage, iStandardDeviation), iFloor)
+}
+
+//  TODO: Math.max() vs redraw; and, should we allow === iFloor ?
+//  soft floor redraws illegals
+AS.util.randomNormalFlooredSoft = function(iAverage, iStandardDeviation, iFloor) {
+    let iWorking = AS.util.randomNormal(iAverage, iStandardDeviation);
+    iFloor = iFloor || 0;
+
+    while (iWorking < iFloor) {
+        iWorking = AS.util.randomNormal(iAverage, iStandardDeviation);
+    }
+
+    return iWorking;
 }
 
 // assumes a flat distrobution
