@@ -60,7 +60,7 @@ const constants = {
 class DiffuseModel extends AS.Model {
     setup() {
         // model config
-        this.population = 1;
+        this.population = 1; // currently, pop = 10 gets ~ 2-3 fps
         this.radius = 2;
         this.turtles.setDefault('shape', 'circle');
         this.cmap = AS.ColorMap.Rgb256;
@@ -85,9 +85,10 @@ class DiffuseModel extends AS.Model {
 
             if (AS.util.randomFloat(1.0) < constants.iPercentPatchesWithSchool) {
                 patch.schoolData = {};
+                patch.schoolData['price'] = AS.util.randomNormalFloored(constants.iGeneric, constants.iGenericStandardDeviation);
+                // TODO use critical policy factor iFlooredSchoolPrice; theory that it slows economic growth, natural floor at 0 almost every time, but sometimes not esp when schools are few; can regress those params
                 AS.util.assignNormals(patch.schoolData,
-                                      ['price',
-                                       'reputation',
+                                      ['reputation',
                                        'suffering'],
                                       constants.iGeneric,
                                       constants.iGenericStandardDeviation);
