@@ -40,6 +40,8 @@ a tick in this model is supposed to represent an hour
 // TODO: better use of work and school reputation
 
 // TODO: perf: use patch.typedColor instead of .setColor/.getColor()
+
+// Chrome 32 bit is limitted to 3 gb per process ram https://www.reddit.com/r/chrome/comments/2rcx22/is_there_a_way_to_allocate_more_ram_for_google/
 */
 
 const constants = {
@@ -47,8 +49,7 @@ const constants = {
     arrsLastNames: ['Neutron', 'Johns', 'Trump', 'Obama', 'Axtell', 'Densmore', 'Frost', 'Jones'],
     iAverageAge: 38, // median us age
     iAgeStandardDeviation: 10, //totally made up
-    iGeneric: 2.5,  // arbitrary normal targeted at a human-watcheable speed
-    iGenericStandardDeviation: .5,
+    iAverageSpeed: 2.5,  // arbitrary normal targeted at a human-watcheable speed
     iPercentPatchesWithJob: .1,
     iPercentPatchesWithSchool: .01,
     iTicksToBecomeEducated: 60, // suppose it's months and 5 years is the average.
@@ -67,6 +68,7 @@ class DiffuseModel extends AS.Model {
         this.iPathColorTickLimit = 40;
 
         // patch config
+        // patch reputation really represent all nonpecuniary benefits including reputation
         this.patches.ask(patch => {
             patch.model = this;
             patch.iPathColorTicks = 0;
@@ -75,23 +77,19 @@ class DiffuseModel extends AS.Model {
             patch.setColor(patch.iOriginalColor);
             if (AS.util.randomFloat(1.0) < constants.iPercentPatchesWithJob) {
                 patch.jobData = {};
+                patch.jobData['wages'] = AS.util.randomNormalFloored();
                 AS.util.assignNormals(patch.jobData,
                                       ['educatedBonusWages',
-                                       'reputation', // really, represents all nonpecuniary benefits including reputation
-                                       'wages'],
-                                      constants.iGeneric,
-                                      constants.iGenericStandardDeviation);
+                                       'reputation']);
             }
 
             if (AS.util.randomFloat(1.0) < constants.iPercentPatchesWithSchool) {
                 patch.schoolData = {};
-                patch.schoolData['price'] = AS.util.randomNormalFloored(constants.iGeneric, constants.iGenericStandardDeviation);
+                patch.schoolData['price'] = AS.util.randomNormalFloored();
                 // TODO use critical policy factor iFlooredSchoolPrice; theory that it slows economic growth, natural floor at 0 almost every time, but sometimes not esp when schools are few; can regress those params
                 AS.util.assignNormals(patch.schoolData,
                                       ['reputation',
-                                       'suffering'],
-                                      constants.iGeneric,
-                                      constants.iGenericStandardDeviation);
+                                       'suffering']);
             }
         })
 
@@ -185,10 +183,12 @@ module.exports = DiffuseModel;
 //  TODO: these values are roughly linear but maybe shouldn't be; eg real time preference may not be a linear discount factor
 function fInitTurtle(turtle, oData) {
     const arrsNormals = ['money', 'productivity'];
-    const arrsFlooredNormals = ['consumptionUtility', 'leisureUtility', 'speed', 'timePreference'];
+    const arrsFlooredNormals = ['consumptionUtility', 'leisureUtility', 'timePreference'];
 
-    AS.util.assignNormals(turtle, arrsNormals, constants.iGeneric, constants.iGenericStandardDeviation);
-    AS.util.assignFlooredNormals(turtle, arrsFlooredNormals, constants.iGeneric, constants.iGenericStandardDeviation);
+    AS.util.assignNormals(turtle,
+                          arrsNormals);
+    AS.util.assignFlooredNormals(turtle,
+                                 arrsFlooredNormals);
 
     turtle.age = AS.util.randomNormal(constants.iAverageAge, constants.iAgeStandardDeviation);
     turtle.curiosity = AS.util.randomFloat(1.0); // probability to consider school or a new job
@@ -196,6 +196,7 @@ function fInitTurtle(turtle, oData) {
     turtle.home = oData.patch;
     turtle.model = oData.model;
     turtle.name = AS.util.randomFromArray(constants.arrsFirstNames) + ' ' + AS.util.randomFromArray(constants.arrsLastNames);
+    turtle.speed = AS.util.randomNormalFloored(constants.iAverageSpeed);
 
     // by default turtle is leisurely at home
     turtle.iActiveHighlight = constants.iHighlightToHome;
