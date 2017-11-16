@@ -55,17 +55,21 @@ const constants = {
     iTicksToBecomeEducated: 60, // suppose it's months and 5 years is the average.
     iHighlightToHome: AS.Color.color(200, 0, 0), // red
     iHighlightToSchool: AS.Color.color(0, 200, 0), // green
-    iHighlightToWork: AS.Color.color(0, 0, 200) // blue
+    iHighlightToWork: AS.Color.color(0, 0, 200), // blue
+    iTurtleHighlightWidth: 2,
+    iTurtleSize: 1,
+    iPopulation: 1, // currently, pop = 10 gets ~ 2-3 fps
+    iTrials: 1,
+    iPathColorTickLimit: 40,
+    sTurtleShape: 'circle'
 }
 
 class DiffuseModel extends AS.Model {
     setup() {
         // model config
-        this.population = 1; // currently, pop = 10 gets ~ 2-3 fps
-        this.radius = 2;
-        this.turtles.setDefault('shape', 'circle');
+        this.population = constants.iPopulation; 
+        this.turtles.setDefault('shape', constants.sTurtleShape);
         this.cmap = AS.ColorMap.Rgb256;
-        this.iPathColorTickLimit = 40;
 
         // patch config
         // patch reputation really represent all nonpecuniary benefits including reputation
@@ -119,23 +123,16 @@ class DiffuseModel extends AS.Model {
         })
 
         // turtle config
-        this.turtles.setDefault('size', 1)
+        this.turtles.setDefault('size',  constants.iTurtleSize)
     }
 
     // TODO: aging and dying agents, collect statistics
     step() {
         /*
-        if (this.done) return
+        if (fEndTrial()) {
+            fCollectStatistics();
 
-        if (!this.bros.length
-           && !this.gals.length) {
-            console.log('Done:', this.anim.toString())
-            const iTicksSurvived = this.burnedTrees / this.initialTrees * 100
-            console.log('Ticks survived', iTicksSurvived)
-
-            // TODO: stats on properties of population eg age distrobution, min/max, correlate survival to properties.
-
-            this.done = true
+            this.done = true // TODO: restart and run until n trials collected
             return // keep three control running
         }
         */
@@ -150,7 +147,7 @@ class DiffuseModel extends AS.Model {
 
             turtle.iLifetimeUtility += turtle.iUtilityPerTick;
 
-            this.patches.inRadius(turtle.patch, this.radius, true)
+            this.patches.inRadius(turtle.patch, constants.iTurtleHighlightWidth, true)
                 .ask(patch => {
                     patch.setColor(turtle.iActiveHighlight);
                     patch.iPathColorTicks = 1;
@@ -164,7 +161,7 @@ class DiffuseModel extends AS.Model {
             })
             .ask(patch => {
                 patch.iPathColorTicks++;
-                if (patch.iPathColorTicks === this.iPathColorTickLimit) {
+                if (patch.iPathColorTicks === constants.iPathColorTickLimit) {
                     patch.setColor(patch.iOriginalColor);
                     patch.iPathColorTicks = 0;
                 }
