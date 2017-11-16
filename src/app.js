@@ -1,7 +1,7 @@
 'use strict'
 
 var AS = require('./static/scripts/asx-wf');
-var DiffuseModel = require('./static/scripts/diffuse.js');
+var ActiveModel = require('./static/scripts/education.js'); // TODO: constants in UI form and swappable at run time
 
 function main() {
     initModel();
@@ -12,7 +12,7 @@ function initModel() {
     options.minX = 2 * options.minX
     options.maxX = 2 * options.maxY
 
-    const model = new DiffuseModel(document.body, options)
+    const model = new ActiveModel(document.body, options)
     window.model = model; //facilitate debugging
     window.aturtle = model.turtles[0]; //facilitate debugging
     window.apatch = model.patches[0]; //facilitate debugging

@@ -64,7 +64,7 @@ const constants = {
     sTurtleShape: 'circle'
 }
 
-class DiffuseModel extends AS.Model {
+class EducationModel extends AS.Model {
     setup() {
         // model config
         this.population = constants.iPopulation; 
@@ -169,7 +169,7 @@ class DiffuseModel extends AS.Model {
     }
 }
 
-module.exports = DiffuseModel;
+module.exports = EducationModel;
 
 //  TODO: diminishing marginal utility of consumption, and consumption by kind
 //          also maybe go some place to consume. right now they consume anywhere
