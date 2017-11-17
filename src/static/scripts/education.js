@@ -59,6 +59,7 @@ const constants = {
     iTurtleHighlightWidth: 2,
     iTurtleSize: 1,
     iPopulation: 1, // currently, pop = 10 gets ~ 2-3 fps
+    iSteadyTickLimit: 1000,
     iTrials: 1,
     iPathColorTickLimit: 40,
     sTurtleShape: 'circle'
@@ -67,6 +68,7 @@ const constants = {
 class EducationModel extends AS.Model {
     setup() {
         // model config
+        this.iSteadyTicks = 0;
         this.population = constants.iPopulation; 
         this.turtles.setDefault('shape', constants.sTurtleShape);
         this.cmap = AS.ColorMap.Rgb256;
@@ -128,14 +130,12 @@ class EducationModel extends AS.Model {
 
     // TODO: aging and dying agents, collect statistics
     step() {
-        /*
-        if (fEndTrial()) {
-            fCollectStatistics();
+        if (fEndTrial(this)) {
+            fCollectStatistics(this);
 
             this.done = true // TODO: restart and run until n trials collected
             return // keep three control running
         }
-        */
 
         this.turtles.ask((turtle) => {
             if (Number.isInteger(turtle.iTicksInSchool)) {
@@ -250,8 +250,9 @@ function fGetDesiredMovement(turtle) {
     }
 }
 
-// TODO: check model.anim.ticks
-// I think they are getting instantly educated; this is a bug
+// turtle needn't physically go to school
+// if they work and school, will physically go to work
+// same for home/leisure
 function fGetEducated(turtle) {
     turtle.iLifetimeUtility -= turtle.school.suffering;
     turtle.iTicksInSchool++;
@@ -261,6 +262,7 @@ function fGetEducated(turtle) {
         delete turtle.iTicksInSchool;
     }
 }
+
 // TODO: in the real world, unemployed folks go to school too. Also, comparing price to wages this way is not an economically valid business rule (need future payoffs). Also, consider school rep and the possibility of school transfers. Also, loans instead of cash.
 function fConsiderGoingToSchool(turtle, patchSchoolToConsider) {
     if (!turtle.isEducated &&
@@ -273,4 +275,42 @@ function fConsiderGoingToSchool(turtle, patchSchoolToConsider) {
         turtle.iActiveHighlight = constants.iHighlightToSchool;
         turtle.iTicksInSchool = 0;
     }
+}
+
+// TODO: this rule isn't great, but how bad is it?
+function fEndTrial(_model) {
+    let iMovingTurtles = _model.turtles.filter(function(oTurtle){
+        return oTurtle.bMoving;
+    }).length;
+
+    if (!iMovingTurtles) {
+        _model.iSteadyTicks++;
+    } else {
+        _model.iSteadyTicks = 0;
+    }
+
+    return (_model.iSteadyTicks === constants.iSteadyTickLimit);
+}
+
+// report constants
+// then report key vars and calc average and SD
+// then execute selected regressions
+//
+// for each factor, get average and SD
+// then, do specified regressions
+// then, report all constants including higher order constants
+//
+// TODO: this is the role of a server process; we don't need a GUI
+// so, flatten model and POST (can't JSON.stringify circular)
+function fCollectStatistics() {
+    //school factors
+    //job factors
+    //turtle factors
+    //count, leisurevalue, wages, isEducated, money, curiosity, utility
+
+    //regression 1
+    //regression 2
+    //regression 3
+
+    console.log('trial complete');
 }
