@@ -133,7 +133,7 @@ class EducationModel extends AS.Model {
         if (fEndTrial(this)) {
             fCollectStatistics(this);
 
-            this.done = true // TODO: restart and run until n trials collected
+            this.done = true // TODO: restart and run until n trials collected. OR USE WEB WORKERS IN PARALLEL W GPU ACCELERATION WOOT
             return // keep three control running
         }
 
