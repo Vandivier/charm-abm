@@ -59,7 +59,7 @@ const constants = {
     iTurtleHighlightWidth: 2,
     iTurtleSize: 1,
     iPopulation: 1, // currently, pop = 10 gets ~ 2-3 fps
-    iSteadyTickLimit: 1000,
+    iSteadyTickLimit: 2500,
     iTrials: 1,
     iPathColorTickLimit: 40,
     sTurtleShape: 'circle'
