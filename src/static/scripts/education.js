@@ -303,10 +303,14 @@ function fEndTrial(_model) {
 // TODO: this is the role of a server process; we don't need a GUI
 // so, flatten model and POST (can't JSON.stringify circular)
 function fCollectStatistics() {
+    // for each get n, average, min, max, sd
+
     //school factors
+    // price, reputation, suffering
     //job factors
+    // wages, educatedBonusWages, reputation
     //turtle factors
-    //count, leisurevalue, wages, isEducated, money, curiosity, utility
+    //'money', 'productivity','consumptionUtility', 'leisureUtility', 'timePreference', curiosity, age, iLifetimeUtility, name, speed, iUtilityPerTick, isEducated
 
     //regression 1
     //regression 2
