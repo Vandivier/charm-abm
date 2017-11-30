@@ -11,9 +11,7 @@
 // * [Using timers & requestAnimationFrame together](http://goo.gl/ymEEX)
 
 class SimpleBlindAnimator {
-    // Create initial animator for the model, specifying rate (fps) and
-    // multiStep. Called by Model during initialization, use setRate to modify.
-    // If multiStep, run the step() methods separately by
+    // Create initial animator for the model
     constructor(model) {
         Object.assign(this, {
             model,
@@ -26,13 +24,12 @@ class SimpleBlindAnimator {
         if (!this.stopped) return // avoid multiple starts
         this.resetTimes();
         this.stopped = false;
-        this.step();
+        this.animateSteps();
     }
     stop() {
         this.stopped = true;
-        if (this.animHandle) cancelAnimationFrame(this.animHandle);
         if (this.timeoutHandle) clearTimeout(this.timeoutHandle);
-        this.animHandle = this.timeoutHandle = null;
+        this.timeoutHandle = null;
     }
     // Internal utility: reset time instance variables
     resetTimes() {
@@ -70,4 +67,10 @@ class SimpleBlindAnimator {
     toString() {
         return `ticks: ${this.ticks}, ticks per second: ${this.ticksPerSec()}`
     }
+    animateSteps() {
+        this.step();
+        if (!this.stopped) this.timeoutHandle = setTimeout(() => this.animateSteps(), 0);
+    }
 }
+
+module.exports = SimpleBlindAnimator;

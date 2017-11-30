@@ -1,10 +1,14 @@
 //  ASX Wild Fork is a superset of AS & AS Core
 //  Nondestructive wrapper atm and I hope it stays that way
 //  But, it's possible to support mutation as well
+//  i only put stuff in AS.util TODO: use another namespace
 //  TODO: .mjs?
 
 const AS = require('asx-abm');
 const utils = require('./utils');
+const SimpleBlindAnimator = require('./simple-blind-anim');
+
+AS.util.SimpleBlindAnimator = SimpleBlindAnimator;
 
 //  use soft floor by default
 AS.util.randomNormalFloored = function(iAverage, iStandardDeviation, iFloor) {
