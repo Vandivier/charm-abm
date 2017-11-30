@@ -3,8 +3,19 @@
 var AS = require('./static/scripts/asx-wf');
 var ActiveModel = require('./static/scripts/education.js'); // TODO: constants in UI form and swappable at run time
 
+main();
+
 function main() {
-    initModel();
+    const _worker = new Worker('./static/scripts/charm-worker.js');
+    _worker.postMessage({
+        'cmd': 'assign-id',
+        'id': 1
+    });
+
+    _worker.addEventListener('message', function (e) {
+        console.log('Worker said: ', e.data);
+    }, false);
+    //initModel();
 }
 
 function initModel() {
@@ -36,6 +47,4 @@ function initModel() {
             });
         }
     }
-} 
-
-main();
+}
