@@ -7,11 +7,12 @@
 </head>
 
 <body>
-    <div id="textdiv"></div>
-    <div id="modeldiv"></div>
     <div class="model-controllers">
-        <button id="reset">Reset</button>
+        <button class="reset" onclick="fReset()">Reset</button>
+        <button class="blind-mode" onclick="fToggleBlind()">Toggle Blind Mode</button>
     </div>
+    <div class="model-div"></div>
+    <div class="log-text-div"></div>
 
     <script type="text/javascript" src="/static/scripts/dat.gui.js"></script>
 </body>

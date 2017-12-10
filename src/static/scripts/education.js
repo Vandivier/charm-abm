@@ -66,6 +66,10 @@ const constants = {
 }
 
 class EducationModel extends AS.Model {
+    static defaultRenderer() {
+        return Three.defaultOptions()
+    }
+
     setup() {
         // meta config
         this.anim = new AS.util.SimpleBlindAnimator(this);

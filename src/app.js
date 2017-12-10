@@ -3,6 +3,8 @@
 var AS = require('./static/scripts/asx-wf');
 var ActiveModel = require('./static/scripts/education.js'); // TODO: constants in UI form and swappable at run time
 
+var bBlindMode = true; // true by default to simplify scraping
+
 main();
 
 function main() {
@@ -15,36 +17,29 @@ function initModel() {
     optionsWorld.maxX = 2 * optionsWorld.maxY
 
     // ref: AS.premodule.js, class Three, static defaultOption
-    static fCustomRendererOptions(useThreeHelpers = true, useUIHelpers = true) {
+    function fCustomRendererOptions(useThreeHelpers = true, useUIHelpers = true) {
         const options = {
             // include me in options so Model can instanciate me!
-            Renderer: Three, // REMIND: use string.
+            Renderer: AS.Three, // REMIND: use string.
             orthoView: false, // 'Perspective', 'Orthographic'
             clearColor: 0x000000, // clear to black
             useAxes: useThreeHelpers, // show x,y,z axes
             useGrid: useThreeHelpers, // show x,y plane
             useControls: useThreeHelpers, // navigation. REMIND: control name?
             useStats: useUIHelpers, // show fps widget
-            useGUI: useUIHelpers, // activate dat.gui UI
-            // meshes: {
+            useGUI: false, // activate dat.gui UI
             patches: {
                 meshClass: 'PatchesMesh'
             },
             turtles: {
                 meshClass: 'QuadSpritesMesh'
-                // meshClass: 'PointsMesh'
             },
             links: {
                 meshClass: 'LinksMesh'
             }
-            // }
         };
-        // util.forEach(options.meshes, (val, key) => {
-        //   const Mesh = Meshes[val.meshClass]
-        //   const meshOptions = Mesh.options()
-        //   val.options = meshOptions
-        // })
-        util.forEach(options, (val, key) => {
+
+        AS.util.forEach(options, (val, key) => {
             if (val.meshClass) {
                 const Mesh = Meshes[val.meshClass];
                 const meshOptions = Mesh.options();
@@ -55,7 +50,7 @@ function initModel() {
         return options
     }
 
-    const model = new ActiveModel(document.body, optionsWorld)
+    const model = new ActiveModel(document.body, optionsWorld, fCustomRendererOptions()) // TODO: refactor AS.model for hot-swappable render. Atm I have to restart
     window.model = model; //facilitate debugging
     window.aturtle = model.turtles[0]; //facilitate debugging
     window.apatch = model.patches[0]; //facilitate debugging
@@ -79,4 +74,12 @@ function initModel() {
             });
         }
     }
+}
+
+function fReset() {
+    model.restart(true);
+}
+
+function fToggleBlind() {
+    bBlindMode = !bBlindMode;
 }
