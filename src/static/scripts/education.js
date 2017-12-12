@@ -286,6 +286,7 @@ function fConsiderGoingToSchool(turtle, patchSchoolToConsider) {
 }
 
 // TODO: this rule isn't great, but how bad is it?
+// TODO: if total system utilitypersecond hasn't changed, increment steady sticks. to dodge overshooting/jiggle bug
 function fEndTrial(_model) {
     let iMovingTurtles = _model.turtles.filter(function(oTurtle){
         return oTurtle.bMoving;
@@ -297,7 +298,8 @@ function fEndTrial(_model) {
         _model.iSteadyTicks = 0;
     }
 
-    return (_model.iSteadyTicks === constants.iSteadyTickLimit);
+    return (_model.iSteadyTicks === constants.iSteadyTickLimit
+            || _model.anim.ticks > 25000); // 25000 is a hard stop
 }
 
 // report constants
