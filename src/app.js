@@ -12,7 +12,7 @@ function main() {
 }
 
 function initModel() {
-    const optionsWorld = AS.Model.defaultWorld(2, 50)
+    const optionsWorld = AS.Model.defaultWorld(2, 40)
     optionsWorld.minX = 2 * optionsWorld.minX
     optionsWorld.maxX = 2 * optionsWorld.maxY
 
@@ -50,7 +50,9 @@ function initModel() {
         return options
     }
 
-    const model = new ActiveModel(document.body, optionsWorld, fCustomRendererOptions()) // TODO: refactor AS.model for hot-swappable render. Atm I have to restart
+    const elDiv = document.querySelector('.model-div');
+    console.log(elDiv)
+    const model = new ActiveModel(elDiv, optionsWorld, fCustomRendererOptions()) // TODO: refactor AS.model for hot-swappable render. Atm I have to restart
     window.model = model; //facilitate debugging
     window.aturtle = model.turtles[0]; //facilitate debugging
     window.apatch = model.patches[0]; //facilitate debugging
@@ -76,10 +78,13 @@ function initModel() {
     }
 }
 
-function fReset() {
-    model.restart(true);
+model.fReset = function() {
+    model.stop();
+    model.reset();
+    model.setup();
+    model.start();
 }
 
-function fToggleBlind() {
+model.fToggleBlind = function() {
     bBlindMode = !bBlindMode;
 }

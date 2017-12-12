@@ -72,7 +72,7 @@ class EducationModel extends AS.Model {
 
     setup() {
         // meta config
-        this.anim = new AS.util.SimpleBlindAnimator(this);
+        //this.anim = new AS.util.SimpleBlindAnimator(this);
 
         // model config
         this.iSteadyTicks = 0;
