@@ -1,3 +1,7 @@
+body { /* short term hack */
+    overflow: hidden;
+}
+
 .model-div {
     background: black;
     display: inline-block;
@@ -9,6 +13,24 @@
 .ui-console {
     display: inline-block;
     height: 100vh;
-    max-width: 20%;
-    width: 20%;
+    width: 19%;
+    vertical-align: top;
+}
+
+.ui-console .button-area {
+    margin: 15px;
+    width: 100%;
+}
+
+.ui-console .button-area .button {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.ui-console .log-text-div {
+    background: black;
+    color: silver;
+    height: 20vh;
+    overflow-y: scroll;
+    width: 100%;
 }

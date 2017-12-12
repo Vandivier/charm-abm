@@ -10,9 +10,13 @@
 <body>
     <div class="model-div"></div>
     <div class="ui-console">
-        <button class="reset" onclick="model.fReset()">Reset</button>
-        <button class="blind-mode" onclick="model.fToggleBlind()">Toggle Blind Mode</button>
         <div class="log-text-div"></div>
+
+        <div class="button-area">
+            <button class="button" onclick="model.fPause()">Pause</button>
+            <button class="button reset" onclick="model.fReset()">Reset</button>
+            <button class="button blind-mode" onclick="model.fToggleBlind()">Toggle Blind Mode</button>
+        </div>
     </div>
 
     <script type="text/javascript" src="/static/scripts/dat.gui.js"></script>

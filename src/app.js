@@ -64,21 +64,25 @@ function initModel() {
 //  TODO: freeze model time without preventing model rotation, zoom, etc?
 window.onkeyup = function (e) {
     if (e.keyCode == 13) { // enter key
-        if (model.anim.stopped) {
-            model.anim.start()
-        } else {
-            model.anim.stop()
-        }
+        model.fPause();
     }
 }
 
-model.fReset = function() {
+model.fPause = function (e) {
+    if (model.anim.stopped) {
+        model.anim.start()
+    } else {
+        model.anim.stop()
+    }
+}
+
+model.fReset = function () {
     model.stop();
     model.reset();
     model.setup();
     model.start();
 }
 
-model.fToggleBlind = function() {
+model.fToggleBlind = function () {
     bBlindMode = !bBlindMode;
 }
