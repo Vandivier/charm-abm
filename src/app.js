@@ -47,7 +47,7 @@ function initModel() {
             }
         });
 
-        return options
+        return options;
     }
 
     const elDiv = document.querySelector('.model-div');
@@ -59,21 +59,15 @@ function initModel() {
 
     model.setup()
     model.start()
+}
 
-    //  TODO: freeze model time without preventing model rotation, zoom, etc?
-    window.onkeyup = function (e) {
-        if (e.keyCode == 32) { // space bar
-            if (model.anim.stopped) {
-                model.anim.start()
-            } else {
-                model.anim.stop()
-            }
-        }
-
-        if (e.keyCode == 13) { // enter key
-            model.turtles.ask(turtle => { // shake up turtle locations
-                turtle.moveTo(AS.util.oneOf(model.patches))
-            });
+//  TODO: freeze model time without preventing model rotation, zoom, etc?
+window.onkeyup = function (e) {
+    if (e.keyCode == 13) { // enter key
+        if (model.anim.stopped) {
+            model.anim.start()
+        } else {
+            model.anim.stop()
         }
     }
 }
