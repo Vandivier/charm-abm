@@ -198,6 +198,7 @@ function fInitTurtle(turtle, oData) {
     turtle.curiosity = AS.util.randomFloat(1.0); // probability to consider school or a new job
     turtle.iLifetimeUtility = 0;
     turtle.home = oData.patch;
+    turtle.isEducated = false;
     turtle.model = oData.model;
     turtle.name = AS.util.randomFromArray(constants.arrsFirstNames) + ' ' + AS.util.randomFromArray(constants.arrsLastNames);
     turtle.speed = AS.util.randomNormalFloored(constants.iAverageSpeed);
