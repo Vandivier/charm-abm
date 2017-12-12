@@ -30,7 +30,7 @@ body { /* short term hack */
 .ui-console .log-text-div {
     background: black;
     color: silver;
-    height: 20vh;
+    height: 30vh;
     overflow-y: scroll;
     width: 100%;
 }

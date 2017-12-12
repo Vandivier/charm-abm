@@ -1,9 +1,9 @@
 'use strict'
 
-var AS = require('./static/scripts/asx-wf');
-var ActiveModel = require('./static/scripts/education.js'); // TODO: constants in UI form and swappable at run time
+const AS = require('./static/scripts/asx-wf');
+const ActiveModel = require('./static/scripts/education.js'); // TODO: constants in UI form and swappable at run time
 
-var bBlindMode = true; // true by default to simplify scraping
+const elLog = document.querySelector('.log-text-div');
 
 main();
 
@@ -51,14 +51,12 @@ function initModel() {
     }
 
     const elDiv = document.querySelector('.model-div');
-    console.log(elDiv)
-    const model = new ActiveModel(elDiv, optionsWorld, fCustomRendererOptions()) // TODO: refactor AS.model for hot-swappable render. Atm I have to restart
+    let model = new ActiveModel(elDiv, optionsWorld, fCustomRendererOptions())
+    model.bUseBlindAnim = true;
+
     window.model = model; //facilitate debugging
     window.aturtle = model.turtles[0]; //facilitate debugging
     window.apatch = model.patches[0]; //facilitate debugging
-
-    model.setup()
-    model.start()
 }
 
 //  TODO: freeze model time without preventing model rotation, zoom, etc?
@@ -79,10 +77,28 @@ model.fPause = function (e) {
 model.fReset = function () {
     model.stop();
     model.reset();
+}
+
+// re-setup() then start()
+model.fWFStart = function() {
     model.setup();
     model.start();
 }
 
+// atm u have to toggle off before first setup and start
+// TODO: hot-swapping fToggleBlind
 model.fToggleBlind = function () {
-    bBlindMode = !bBlindMode;
+    model.bUseBlindAnim = !model.bUseBlindAnim;
+}
+
+model.fLogStats = function () {
+    elLog.innerText += ('\n\rblind mode: ' + model.bUseBlindAnim);
+    elLog.innerText += ('\n\rticks: ' + model.anim.ticks);
+
+    // now scroll down to latest log
+    elLog.scrollTop = elLog.scrollHeight;
+}
+
+model.fClearLog = function () {
+    elLog.innerText = '';
 }
