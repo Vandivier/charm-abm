@@ -4,6 +4,10 @@ Charm ABM is my third attempt to build an agent based model of education.
 
 The current implementation leverages ASX and Webpack.
 
+Scrapable with [Charm Scraper](https://github.com/Vandivier/data-science-practice/tree/master/js/charm-scraper)!
+
+Video overview and live coding [video playlist here](https://www.youtube.com/watch?v=s31uI3fQoBA&list=PL4hsXTgWARMzenmaLLeweueaLVbIC4qty&index=1&t=316s)!
+
 ## Developer Information
 * `git clone`
 * `npm install` with Git Bash or similar. Doesn't work with cmd.
