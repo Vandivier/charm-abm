@@ -58,7 +58,7 @@ const constants = {
     iHighlightToWork: AS.Color.color(0, 0, 200), // blue
     iTurtleHighlightWidth: 2,
     iTurtleSize: 1,
-    iPopulation: Math.floor(Math.random() * 40), // currently, pop = 50 gets ~ 10 fps
+    iPopulation: 5, // currently, pop = 50 gets ~ 10 fps
     iSteadyTickLimit: 2500,
     iTrials: 1,
     iPathColorTickLimit: 40,
